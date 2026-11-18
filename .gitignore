@@ -1,0 +1,37 @@
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+Icon?
+
+# Swift Package Manager
+.build/
+.swiftpm/
+
+# Xcode
+xcuserdata/
+DerivedData/
+*.xcscmblueprint
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+
+# Build and release artifacts
+build/
+dist/
+
+# Signing material and secrets
+*.p12
+*.cer
+*.certSigningRequest
+*.mobileprovision
+*.provisionprofile
+*.keychain-db
+.env*
+
+# Ad-hoc exports from --export-* commands (README images live in docs/images)
+/*.png
+/*.gif
