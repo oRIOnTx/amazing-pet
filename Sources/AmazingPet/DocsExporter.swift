@@ -143,11 +143,21 @@ enum DocsExporter {
         }
     }
 
+    private static let textMargin = 16.0
+
     private static func drawText(_ text: String, size: CGFloat, scale: Double, color: CGColor, centerX: Double, top: Double, in ctx: CGContext) {
         guard let image = PixelText.render(text, size: size, color: color) else { return }
+        let scale = fittingScale(scale, imageWidth: Double(image.width), available: Double(ctx.width) - 2 * textMargin)
         let width = Double(image.width) * scale
         let height = Double(image.height) * scale
-        ctx.draw(image, in: CGRect(x: (centerX - width / 2).rounded(), y: Double(ctx.height) - top - height, width: width, height: height))
+        let x = max(textMargin, min(centerX - width / 2, Double(ctx.width) - textMargin - width))
+        ctx.draw(image, in: CGRect(x: x.rounded(), y: Double(ctx.height) - top - height, width: width, height: height))
+    }
+
+    private static func fittingScale(_ preferred: Double, imageWidth: Double, available: Double) -> Double {
+        var scale = preferred
+        while scale > 1, imageWidth * scale > available { scale -= 0.5 }
+        return scale
     }
 
     private static func writeGIF(_ frames: [CGImage], to url: URL) throws {
