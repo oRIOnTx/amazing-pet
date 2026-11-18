@@ -40,6 +40,7 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - `Tests/AmazingPetCoreTests`: unit tests (Swift Testing; with Command Line Tools only, the package passes the CLT macro plugin path to the test target, with Xcode it does not).
 - `Resources`: `Info.plist` and localizations.
 - `docs/images`: generated README images (banner, GIFs, screenshots).
+- `CHANGELOG.md`: user-facing version history.
 - `.github/workflows`: CI and release automation.
 
 ## Commands
@@ -65,3 +66,10 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
   - PATCH: user-visible fixes and improvements without new capability, such as `fix:`, `perf:`, tweaks to sprites or timing, and translation fixes.
   - No release: only `docs:`, `test:`, `ci:`, `build:`, `chore:` or `refactor:` with no user-visible change.
 - When finishing a change, state which bump it implies. When asked to release, list the commits since the last tag, propose the version with a one-line reason per bump, and create an annotated tag only after confirmation. Pushing tags needs explicit approval, like any push.
+- The version changes only when the app itself changes for users. Changes to the README, docs images, CI workflows, scripts, tests, `CLAUDE.md` or other tooling never bump the version and never get a changelog entry.
+
+## Changelog
+- `CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), newest version first, in English.
+- Every user-visible change adds a short line under `## [Unreleased]` in the same commit, grouped as `Added`, `Changed`, `Fixed`, `Removed` or `Security`. Write it for users, not developers: what they will notice, not how it was coded.
+- Changes that don't affect the app (see Versioning) get no entry.
+- On release, rename `## [Unreleased]` to `## [X.Y.Z] - YYYY-MM-DD`, add a fresh empty `## [Unreleased]` above it, update the compare links at the bottom, and commit this as `chore(release): vX.Y.Z` before tagging. The changelog section must agree with the bump: an `Added` entry means at least MINOR, a `Removed` entry or a breaking change means MAJOR.

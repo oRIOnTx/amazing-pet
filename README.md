@@ -98,6 +98,8 @@ Grab the latest **`AmazingPet-x.y.z.dmg`** from [**Releases**](../../releases/la
 - **Stable**: every `v*` tag becomes a release.
 - **Nightly**: the [`nightly`](../../releases/tag/nightly) pre-release is rebuilt automatically on every push to `main`.
 
+See [`CHANGELOG.md`](CHANGELOG.md) for what changed in each version.
+
 On first launch from Applications the app registers itself as a login item, so it starts automatically. You can turn that off from the menu with **Launch at login**.
 
 > [!IMPORTANT]
