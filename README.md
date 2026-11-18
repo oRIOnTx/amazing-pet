@@ -103,7 +103,7 @@ See [`CHANGELOG.md`](CHANGELOG.md) for what changed in each version.
 On first launch from Applications the app registers itself as a login item, so it starts automatically. You can turn that off from the menu with **Launch at login**.
 
 > [!IMPORTANT]
-> Unless the maintainer has configured a Developer ID (see [Releases](#-releases)), builds are ad-hoc signed and not notarized, so macOS will block the first launch. Allow it in **System Settings → Privacy & Security → Open Anyway**, or run:
+> Builds are ad-hoc signed and not notarized, so macOS will block the first launch. Allow it in **System Settings → Privacy & Security → Open Anyway**, or run:
 > ```sh
 > xattr -dr com.apple.quarantine /Applications/AmazingPet.app
 > ```
@@ -164,16 +164,7 @@ git push origin v1.0.0
 
 You can build the same artifacts locally with `VERSION=1.0.0 ./package.sh`, which writes them to `dist/`.
 
-**Optional: Developer ID signing and notarization.** Add these repository secrets and releases will be signed with the hardened runtime, notarized and stapled automatically, so users get no Gatekeeper warning. Without them, builds are ad-hoc signed.
-
-| Secret | Value |
-|---|---|
-| `MACOS_CERTIFICATE` | Developer ID Application certificate exported as `.p12`, base64-encoded (`base64 -i cert.p12 \| pbcopy`) |
-| `MACOS_CERTIFICATE_PASSWORD` | Password of that `.p12` |
-| `SIGN_IDENTITY` | e.g. `Developer ID Application: Your Name (TEAMID)` |
-| `APPLE_ID` | Apple ID email used for notarization |
-| `APPLE_TEAM_ID` | Your 10-character team ID |
-| `APPLE_APP_PASSWORD` | An [app-specific password](https://support.apple.com/102654) for that Apple ID |
+Releases are ad-hoc signed and not notarized, so users need the Gatekeeper step described in [Install](#-install). `build.sh` and `package.sh` already support Developer ID signing (`SIGN_IDENTITY`) and notarization (`APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD`) for local builds, if a paid Apple Developer account is ever added.
 
 The workflows use only GitHub's own `checkout` action and the preinstalled `gh` CLI, with no third-party actions.
 

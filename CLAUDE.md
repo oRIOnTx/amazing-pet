@@ -56,7 +56,7 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 
 ## CI / Releases
 - `.github/workflows/ci.yml`: tests and build on pull requests. Pushes to `main` are tested by the release workflow, so CI does not run there too.
-- `.github/workflows/release.yml`: a push to `main` republishes the `nightly` pre-release; a `v*` tag publishes a versioned release. Signing and notarization run only when the Developer ID secrets are set.
+- `.github/workflows/release.yml`: a push to `main` republishes the `nightly` pre-release; a `v*` tag publishes a versioned release. Release builds are ad-hoc signed; there is no Developer ID signing or notarization in CI.
 - Docs-only changes (`*.md`, `docs/**`, `LICENSE`, `NOTICE`) don't trigger CI or nightly builds; tag pushes always build.
 - `.github/scripts/check-changelog.sh` warns in CI when app code (`Sources/`, `Resources/`) changes without a `CHANGELOG.md` update. It is a safety net, not a substitute for the rules above.
 - Use only first-party GitHub actions and the `gh` CLI, no third-party actions.

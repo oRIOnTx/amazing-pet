@@ -23,20 +23,14 @@ jobs:
     runs-on: macos-latest
     env:
       ARCHS: arm64 x86_64
-      MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
-      MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
       - name: Changelog check
         if: github.ref == 'refs/heads/main'
         run: .github/scripts/check-changelog.sh "${{ github.event.before }}..${{ github.sha }}"
-      SIGN_IDENTITY: ${{ secrets.SIGN_IDENTITY }}
-      APPLE_ID: ${{ secrets.APPLE_ID }}
-      APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
-    steps:
-      - uses: actions/checkout@v4
 
       - name: Version
         run: |
@@ -52,21 +46,7 @@ jobs:
       - name: Test
         run: swift test
 
-      - name: Import Developer ID certificate
-        if: env.MACOS_CERTIFICATE != ''
-        run: |
-          KEYCHAIN="$RUNNER_TEMP/signing.keychain-db"
-          KEYCHAIN_PASSWORD="$(openssl rand -base64 24)"
-          echo "$MACOS_CERTIFICATE" | base64 --decode > "$RUNNER_TEMP/certificate.p12"
-          security create-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security set-keychain-settings -lut 21600 "$KEYCHAIN"
-          security unlock-keychain -p "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security import "$RUNNER_TEMP/certificate.p12" -P "$MACOS_CERTIFICATE_PASSWORD" -A -t cert -f pkcs12 -k "$KEYCHAIN"
-          security set-key-partition-list -S apple-tool:,apple: -k "$KEYCHAIN_PASSWORD" "$KEYCHAIN"
-          security list-keychains -d user -s "$KEYCHAIN" $(security list-keychains -d user | tr -d '"')
-          rm "$RUNNER_TEMP/certificate.p12"
-
-      - name: Build, sign and package
+      - name: Build and package
         run: ./package.sh
 
       - name: Publish tagged release
