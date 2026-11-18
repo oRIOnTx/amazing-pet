@@ -3,7 +3,7 @@
 </p>
 
 <p align="center">
-  <a href="../../actions/workflows/ci.yml"><img src="../../actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="../../actions/workflows/release.yml"><img src="../../actions/workflows/release.yml/badge.svg" alt="Build"></a>
   <a href="../../releases/latest"><img src="https://img.shields.io/badge/download-latest-F4A04A" alt="Download"></a>
   <img src="https://img.shields.io/badge/macOS-14%2B-1E1B2E?logo=apple" alt="macOS 14+">
   <img src="https://img.shields.io/badge/Swift-5.10%2B-F4A04A?logo=swift&logoColor=white" alt="Swift 5.10+">
@@ -149,9 +149,11 @@ Two GitHub Actions workflows live in [`.github/workflows`](.github/workflows):
 
 | Workflow | Runs on | What it does |
 |---|---|---|
-| `ci.yml` | every pull request and every push to `main` | `swift test` plus an app build |
+| `ci.yml` | every pull request | `swift test` plus an app build |
 | `release.yml` | push to `main` | tests, then builds a universal app and republishes the **`nightly`** pre-release with a `.dmg`, a `.zip` and `SHA256SUMS.txt` |
 | `release.yml` | tag `v*` | the same, but publishes a versioned release with generated notes |
+
+Pushes that only touch docs (`*.md`, `docs/**`, `LICENSE`, `NOTICE`) don't trigger builds, since they don't change the app.
 
 To cut a release:
 
@@ -173,7 +175,7 @@ You can build the same artifacts locally with `VERSION=1.0.0 ./package.sh`, whic
 | `APPLE_TEAM_ID` | Your 10-character team ID |
 | `APPLE_APP_PASSWORD` | An [app-specific password](https://support.apple.com/102654) for that Apple ID |
 
-The workflows use only GitHub's own actions (`checkout`, `upload-artifact`) and the preinstalled `gh` CLI, with no third-party actions.
+The workflows use only GitHub's own `checkout` action and the preinstalled `gh` CLI, with no third-party actions.
 
 ### Architecture
 

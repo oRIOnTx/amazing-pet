@@ -52,8 +52,9 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - `AmazingPet --export-preview|--export-species|--export-roam|--export-builder|--export-icon <path>`: render menu bar scenes, all species, on-screen roam games, builder window or iconset to PNG for visual checks.
 
 ## CI / Releases
-- `.github/workflows/ci.yml`: tests and build on pull requests and pushes to `main`.
+- `.github/workflows/ci.yml`: tests and build on pull requests. Pushes to `main` are tested by the release workflow, so CI does not run there too.
 - `.github/workflows/release.yml`: a push to `main` republishes the `nightly` pre-release; a `v*` tag publishes a versioned release. Signing and notarization run only when the Developer ID secrets are set.
+- Docs-only changes (`*.md`, `docs/**`, `LICENSE`, `NOTICE`) don't trigger CI or nightly builds; tag pushes always build.
 - Use only first-party GitHub actions and the `gh` CLI, no third-party actions.
 
 ## Versioning
@@ -65,8 +66,8 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
   - MINOR: a new user-visible capability. New species, coat, toy, game, indicator, setting, menu item or language.
   - PATCH: user-visible fixes and improvements without new capability, such as `fix:`, `perf:`, tweaks to sprites or timing, and translation fixes.
   - No release: only `docs:`, `test:`, `ci:`, `build:`, `chore:` or `refactor:` with no user-visible change.
-- When finishing a change, state which bump it implies. When asked to release, list the commits since the last tag, propose the version with a one-line reason per bump, and create an annotated tag only after confirmation. Pushing tags needs explicit approval, like any push.
 - The version changes only when the app itself changes for users. Changes to the README, docs images, CI workflows, scripts, tests, `CLAUDE.md` or other tooling never bump the version and never get a changelog entry.
+- When finishing a change, state which bump it implies. When asked to release, list the commits since the last tag, propose the version with a one-line reason per bump, and create an annotated tag only after confirmation. Pushing tags needs explicit approval, like any push.
 
 ## Changelog
 - `CHANGELOG.md` follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), newest version first, in English.

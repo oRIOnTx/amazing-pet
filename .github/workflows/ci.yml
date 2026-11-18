@@ -2,8 +2,11 @@ name: CI
 
 on:
   pull_request:
-  push:
-    branches: [main]
+    paths-ignore:
+      - "**.md"
+      - "docs/**"
+      - LICENSE
+      - NOTICE
 
 permissions:
   contents: read
@@ -17,9 +20,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Toolchain
-        run: swift --version
 
       - name: Test
         run: swift test
