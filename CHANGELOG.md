@@ -8,7 +8,9 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 
 ## [Unreleased]
 
-The first public release, planned as `1.0.0`.
+## [1.0.0] - 2026-11-18
+
+The first public release.
 
 ### Added
 - An animated pixel pet that lives in the macOS menu bar.
@@ -22,4 +24,5 @@ The first public release, planned as `1.0.0`.
 - English and Ukrainian, switchable instantly from the menu.
 - Launch at login, enabled automatically on first launch from Applications.
 
-[Unreleased]: https://github.com/oRIOnTx/amazing-pet/commits/main
+[Unreleased]: https://github.com/oRIOnTx/amazing-pet/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/oRIOnTx/amazing-pet/releases/tag/v1.0.0
