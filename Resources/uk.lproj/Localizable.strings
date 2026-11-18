@@ -1,0 +1,84 @@
+"menu.stroke" = "Погладити: %@";
+"menu.customize" = "Налаштувати улюбленця…";
+"menu.toy" = "Іграшка";
+"menu.auto" = "Авто (за навантаженням Mac)";
+"menu.indicators" = "Розумні індикатори";
+"menu.launchAtLogin" = "Запускати при вході";
+"menu.quit" = "Вийти";
+"menu.language" = "Мова";
+"language.system" = "Як у системі";
+"menu.roam" = "Гратися на екрані, коли мене нема";
+"menu.roam.off" = "Вимкнено";
+"menu.roam.now" = "Пограти зараз";
+"menu.roam.after" = "Через %d хв";
+"error.login" = "Не вдалося змінити автозапуск";
+
+"pet.defaultName" = "Піксель";
+"builder.title" = "Створи улюбленця";
+"builder.subtitle" = "Змінити можна потім у меню";
+"builder.name" = "Імʼя";
+"builder.species" = "Тваринка";
+"builder.coat" = "Колір";
+"builder.eyes" = "Очі";
+"builder.random" = "Випадково";
+"builder.done" = "Гратися!";
+
+"toy.sleep" = "Сон";
+"toy.yarn" = "Клубок";
+"toy.mouse" = "Іграшкова мишка";
+"toy.laser" = "Лазерна указка";
+"toy.zoomies" = "Шалені перегони";
+"toy.butterfly" = "Метелик";
+"toy.explore" = "Досліджує вікна";
+"toy.peekaboo" = "Хованки";
+"toy.cursor" = "Полювання на курсор";
+"toy.perch" = "Дрімота на вікні";
+"alert.overheated.title" = "Перегрів";
+"alert.memoryFull.title" = "Памʼять заповнена";
+"alert.hungry.title" = "Низький заряд";
+
+"status.sleep" = "%@ дрімає 💤";
+"status.yarn" = "%@ ганяє клубок 🧶";
+"status.mouse" = "%@ полює на мишку 🐭";
+"status.laser" = "%@ ловить лазер 🔴";
+"status.zoomies" = "%@ шалено гасає 💨";
+"status.butterfly" = "%@ полює на метелика 🦋";
+"status.explore" = "%@ досліджує вікна 🧗";
+"status.peekaboo" = "%@ ховається за вікном 🙈";
+"status.cursor" = "%@ полює на курсор 🖱";
+"status.perch" = "%@ дрімає на вікні 😴";
+"status.overheated" = "%@: спекотно! Mac перегрівся 🌡";
+"status.memoryFull" = "%@ застряг у коробці: памʼять заповнена 📦";
+"status.hungry" = "%@ голодний: батарея сідає 🐟";
+
+"coat.ginger" = "Рудий";
+"coat.gray" = "Сірий";
+"coat.black" = "Чорний";
+"coat.white" = "Білий";
+"coat.siamese" = "Сіамський";
+"coat.calico" = "Трикольоровий";
+"coat.golden" = "Золотистий";
+"coat.brown" = "Коричневий";
+"coat.spotted" = "Плямистий";
+"coat.blue" = "Синій";
+"coat.yellow" = "Жовтий";
+"coat.green" = "Зелений";
+"coat.red" = "Червоний";
+
+"species.cat" = "Котик";
+"species.dog" = "Песик";
+"species.fox" = "Лисичка";
+"species.rabbit" = "Кролик";
+"species.hamster" = "Хомʼячок";
+"species.bird" = "Пташка";
+"species.fish" = "Рибка";
+"species.turtle" = "Черепаха";
+
+"eyes.dark" = "Темні";
+"eyes.amber" = "Бурштинові";
+"eyes.green" = "Зелені";
+"eyes.blue" = "Блакитні";
+
+"metrics.cpu" = "CPU %d%%";
+"metrics.memory" = "Памʼять %d%%";
+"metrics.battery" = "Батарея %d%%";
