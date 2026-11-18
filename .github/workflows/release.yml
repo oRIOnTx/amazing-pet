@@ -15,7 +15,7 @@ concurrency:
 
 jobs:
   release:
-    runs-on: macos-15
+    runs-on: macos-latest
     env:
       ARCHS: arm64 x86_64
       MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
