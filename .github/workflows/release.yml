@@ -25,6 +25,12 @@ jobs:
       ARCHS: arm64 x86_64
       MACOS_CERTIFICATE: ${{ secrets.MACOS_CERTIFICATE }}
       MACOS_CERTIFICATE_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
+        with:
+          fetch-depth: 0
+
+      - name: Changelog check
+        if: github.ref == 'refs/heads/main'
+        run: .github/scripts/check-changelog.sh "${{ github.event.before }}..${{ github.sha }}"
       SIGN_IDENTITY: ${{ secrets.SIGN_IDENTITY }}
       APPLE_ID: ${{ secrets.APPLE_ID }}
       APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}

@@ -20,6 +20,11 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Changelog check
+        run: .github/scripts/check-changelog.sh "origin/${{ github.base_ref }}...HEAD"
 
       - name: Test
         run: swift test
