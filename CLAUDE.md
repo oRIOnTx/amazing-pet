@@ -54,3 +54,14 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - `.github/workflows/ci.yml`: tests and build on pull requests and pushes to `main`.
 - `.github/workflows/release.yml`: a push to `main` republishes the `nightly` pre-release; a `v*` tag publishes a versioned release. Signing and notarization run only when the Developer ID secrets are set.
 - Use only first-party GitHub actions and the `gh` CLI, no third-party actions.
+
+## Versioning
+- Semantic Versioning `MAJOR.MINOR.PATCH`. The single source of truth is the git tag `vX.Y.Z`; CI writes it into `CFBundleShortVersionString` and uses the run number as `CFBundleVersion`. Never hardcode a version in code or `Info.plist`.
+- The first public release is `v1.0.0`.
+- Commit messages follow Conventional Commits so the next version can be derived from history. Mark breaking changes with `!` (`feat!:`) or a `BREAKING CHANGE:` footer.
+- Derive the bump from all commits since the last tag (`git log $(git describe --tags --abbrev=0)..HEAD`), taking the highest one:
+  - MAJOR: anything that breaks users. Removing a feature, raising the minimum macOS, changing the bundle id, or renaming `UserDefaults` keys without a migration (users would lose their pet).
+  - MINOR: a new user-visible capability. New species, coat, toy, game, indicator, setting, menu item or language.
+  - PATCH: user-visible fixes and improvements without new capability, such as `fix:`, `perf:`, tweaks to sprites or timing, and translation fixes.
+  - No release: only `docs:`, `test:`, `ci:`, `build:`, `chore:` or `refactor:` with no user-visible change.
+- When finishing a change, state which bump it implies. When asked to release, list the commits since the last tag, propose the version with a one-line reason per bump, and create an annotated tag only after confirmation. Pushing tags needs explicit approval, like any push.
