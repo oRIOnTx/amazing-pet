@@ -9,12 +9,15 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - Ask before adding dependencies, changing `Package.swift`, `Info.plist`, `build.sh` or `install.sh`, or removing features.
 - Never weaken or delete tests to make them pass. If a test is wrong, say so and explain why.
 - Commit only when asked. Commits made with Claude end with `Co-Authored-By: Claude <noreply@anthropic.com>` (Claude co-authorship is welcome).
+- Before every commit, re-check the Versioning and Changelog sections below: pick the Conventional Commit type that matches the user-visible impact, and update `CHANGELOG.md` in the same commit when users will notice the change.
 
 ## Definition of done
 - `swift test` passes.
 - `./build.sh` builds `build/AmazingPet.app` without warnings.
 - New user-facing strings go through `L10n.swift` and are added to every existing `.lproj`.
 - After visual changes, README images are regenerated with `AmazingPet --export-docs docs/images`.
+- User-visible change: a line is added under `## [Unreleased]` in `CHANGELOG.md`. Non-app change: no entry.
+- The final message of every change states the version impact: `MAJOR`, `MINOR`, `PATCH` or `none`, with a one-line reason.
 
 ## Code
 - No comments in code. Names and small functions must explain intent.
