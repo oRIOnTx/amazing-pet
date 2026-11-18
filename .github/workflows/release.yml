@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
 
 concurrency:
   group: release-${{ github.ref }}
@@ -21,16 +21,22 @@ concurrency:
 jobs:
   release:
     runs-on: macos-latest
+    timeout-minutes: 45
+    permissions:
+      contents: write
     env:
       ARCHS: arm64 x86_64
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
+          persist-credentials: false
 
       - name: Changelog check
         if: github.ref == 'refs/heads/main'
-        run: .github/scripts/check-changelog.sh "${{ github.event.before }}..${{ github.sha }}"
+        env:
+          BEFORE: ${{ github.event.before }}
+        run: .github/scripts/check-changelog.sh "$BEFORE..$GITHUB_SHA"
 
       - name: Version
         run: |
@@ -55,6 +61,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh release create "$RELEASE_TAG" dist/* \
+            --repo "$GITHUB_REPOSITORY" \
             --title "Amazing Pet $VERSION" \
             --generate-notes \
             --verify-tag
@@ -64,8 +71,9 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release delete nightly --yes --cleanup-tag || true
+          gh release delete nightly --repo "$GITHUB_REPOSITORY" --yes --cleanup-tag || true
           gh release create nightly dist/* \
+            --repo "$GITHUB_REPOSITORY" \
             --prerelease \
             --target "$GITHUB_SHA" \
             --title "Nightly build ($VERSION)" \

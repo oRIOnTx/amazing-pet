@@ -61,6 +61,14 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - `.github/scripts/check-changelog.sh` warns in CI when app code (`Sources/`, `Resources/`) changes without a `CHANGELOG.md` update. It is a safety net, not a substitute for the rules above.
 - Use only first-party GitHub actions and the `gh` CLI, no third-party actions.
 
+## Security
+- This is a public repository. Never commit secrets, certificates, `.env` files, tokens or local absolute paths. `.gitignore` blocks the common ones; check `git diff --cached` before every commit anyway.
+- Pin every action to a full commit SHA with the version in a trailing comment (`uses: actions/checkout@<sha> # v7.0.1`). Dependabot keeps them up to date.
+- Workflows default to `permissions: contents: read`; only the release job gets `contents: write`. Check out with `persist-credentials: false`.
+- Never interpolate `${{ github.* }}` or other untrusted input directly into `run:` scripts; pass it through `env:`.
+- Do not add `pull_request_target` or self-hosted runners.
+- Vulnerability reports follow `SECURITY.md`.
+
 ## Versioning
 - Semantic Versioning `MAJOR.MINOR.PATCH`. The single source of truth is the git tag `vX.Y.Z`; CI writes it into `CFBundleShortVersionString` and uses the run number as `CFBundleVersion`. Never hardcode a version in code or `Info.plist`.
 - The first public release is `v1.0.0`.
