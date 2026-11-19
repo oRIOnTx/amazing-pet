@@ -22,7 +22,8 @@ enum WindowScanner {
             let rect = CGRect(x: bounds.minX - frame.minX, y: mainHeight - bounds.maxY - frame.minY, width: bounds.width, height: bounds.height)
             let box = Box(
                 x: rect.minX / pixel, y: (frame.height - rect.maxY) / pixel,
-                width: rect.width / pixel, height: rect.height / pixel
+                width: rect.width / pixel, height: rect.height / pixel,
+                id: info[kCGWindowNumber as String] as? Int ?? 0
             )
             guard rect.intersects(CGRect(origin: .zero, size: frame.size)), World.isOccluder(box, on: stage) else { continue }
             boxes.append(box)

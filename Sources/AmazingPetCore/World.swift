@@ -2,11 +2,13 @@ public struct Platform: Equatable {
     public let y: Double
     public let minX: Double
     public let maxX: Double
+    public let window: Box?
 
-    public init(y: Double, minX: Double, maxX: Double) {
+    public init(y: Double, minX: Double, maxX: Double, window: Box? = nil) {
         self.y = y
         self.minX = minX
         self.maxX = maxX
+        self.window = window
     }
 
     public var width: Double { maxX - minX }
@@ -19,12 +21,18 @@ public struct Box: Equatable {
     public let minY: Double
     public let maxX: Double
     public let maxY: Double
+    public let id: Int
 
-    public init(x: Double, y: Double, width: Double, height: Double) {
+    public init(x: Double, y: Double, width: Double, height: Double, id: Int = 0) {
         minX = x
         minY = y
         maxX = x + width
         maxY = y + height
+        self.id = id
+    }
+
+    func overlaps(x: ClosedRange<Double>, y: ClosedRange<Double>) -> Bool {
+        minX < x.upperBound && maxX > x.lowerBound && minY < y.upperBound && maxY > y.lowerBound
     }
 }
 
@@ -71,14 +79,35 @@ public struct World: Equatable {
 
     func surfaces(on stage: Stage) -> [Platform] {
         let ground = Platform(y: stage.height, minX: 0, maxX: stage.width)
-        let tops = occluders.compactMap { box -> Platform? in
+        let tops = occluders.enumerated().flatMap { index, box -> [Platform] in
             let y = box.minY.rounded(.down)
-            let minX = max(0, box.minX)
-            let maxX = min(stage.width, box.maxX)
-            guard y > Pet.height + 2, y < stage.height, maxX - minX >= Pet.width else { return nil }
-            return Platform(y: y, minX: minX, maxX: maxX)
+            guard y > Pet.height + 2, y < stage.height else { return [] }
+            let covers = occluders[..<index]
+                .filter { $0.minY < y && $0.maxY > y - Pet.height }
+                .map { ($0.minX, $0.maxX) }
+            return Self.subtract(covers, from: (max(0, box.minX), min(stage.width, box.maxX)))
+                .filter { $0.1 - $0.0 >= Pet.width }
+                .map { Platform(y: y, minX: $0.0, maxX: $0.1, window: box) }
         }
         return tops + [ground]
+    }
+
+    static func subtract(_ cuts: [(Double, Double)], from span: (Double, Double)) -> [(Double, Double)] {
+        cuts.reduce([span]) { pieces, cut in
+            pieces.flatMap { piece -> [(Double, Double)] in
+                guard cut.1 > piece.0, cut.0 < piece.1 else { return [piece] }
+                return [(piece.0, cut.0), (cut.1, piece.1)].filter { $0.1 > $0.0 }
+            }
+        }
+    }
+
+    func depth(of box: Box) -> Int? {
+        occluders.firstIndex(of: box)
+    }
+
+    func isClear(x: ClosedRange<Double>, y: ClosedRange<Double>, inFrontOf box: Box) -> Bool {
+        guard let index = depth(of: box) else { return false }
+        return !occluders[..<index].contains { $0.overlaps(x: x, y: y) }
     }
 
     func surface(at feet: Double, x: Double, on stage: Stage) -> Platform? {
@@ -114,22 +143,28 @@ public struct World: Equatable {
     }
 
     func ledges(on stage: Stage, room: Double, minWidth: Double = Pet.width + 4) -> [Ledge] {
-        windowTops(on: stage, minWidth: minWidth).flatMap { top in
-            [Ledge(top: top, right: false), Ledge(top: top, right: true)].filter { ledge in
-                ledge.right ? top.maxX + room <= stage.width : top.minX - room >= 0
+        windowTops(on: stage, minWidth: minWidth).flatMap { top -> [Ledge] in
+            guard let box = top.window else { return [] }
+            return [Ledge(top: top, right: false), Ledge(top: top, right: true)].filter { ledge in
+                ledge.right
+                    ? abs(top.maxX - box.maxX) < 0.5 && top.maxX + room <= stage.width
+                    : abs(top.minX - box.minX) < 0.5 && top.minX - room >= 0
             }
         }
     }
 
     func walls(on stage: Stage) -> [Wall] {
         windowTops(on: stage).flatMap { top -> [Wall] in
-            guard let box = occluders.first(where: { $0.minY.rounded(.down) == top.y && $0.minX <= top.minX + 0.5 && $0.maxX >= top.maxX - 0.5 })
-            else { return [] }
-            return [Wall(x: top.minX, faceRight: true, top: top, base: 0), Wall(x: top.maxX, faceRight: false, top: top, base: 0)]
+            guard let box = top.window else { return [] }
+            return [Wall(x: box.minX, faceRight: true, top: top, base: 0), Wall(x: box.maxX, faceRight: false, top: top, base: 0)]
                 .compactMap { wall in
-                    guard wall.standCenter >= Pet.width / 2, wall.standCenter <= stage.width - Pet.width / 2 else { return nil }
+                    guard abs(wall.x - (wall.faceRight ? top.minX : top.maxX)) < 0.5,
+                          wall.standCenter >= Pet.width / 2, wall.standCenter <= stage.width - Pet.width / 2
+                    else { return nil }
                     let base = surface(under: (wall.standCenter, top.y + 1), on: stage)
-                    guard base.contains(wall.standCenter), base.y - top.y >= Pet.height + 4, box.maxY >= base.y - 6 else { return nil }
+                    guard base.contains(wall.standCenter), base.y - top.y >= Pet.height + 4, box.maxY >= base.y - 6,
+                          isClear(x: wall.climbX...(wall.climbX + Pet.climbWidth), y: (top.y - Pet.height)...base.y, inFrontOf: box)
+                    else { return nil }
                     return Wall(x: wall.x, faceRight: wall.faceRight, top: top, base: base.y)
                 }
         }

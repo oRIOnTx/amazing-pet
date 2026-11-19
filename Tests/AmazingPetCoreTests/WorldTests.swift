@@ -7,8 +7,45 @@ struct WorldTests {
 
     @Test func windowTopsBecomePlatformsAboveGround() {
         let surfaces = World(occluders: [window]).surfaces(on: stage)
-        #expect(surfaces.contains(Platform(y: 120, minX: 100, maxX: 180)))
+        #expect(surfaces.contains(Platform(y: 120, minX: 100, maxX: 180, window: window)))
         #expect(surfaces.last == Platform(y: 200, minX: 0, maxX: 300))
+    }
+
+    @Test func windowInFrontHidesPartOfTheTopBehindIt() {
+        let front = Box(x: 130, y: 100, width: 40, height: 60, id: 1)
+        let back = Box(x: 100, y: 120, width: 120, height: 60, id: 2)
+        let tops = World(occluders: [front, back]).surfaces(on: stage).filter { $0.window == back }
+        #expect(tops == [Platform(y: 120, minX: 100, maxX: 130, window: back), Platform(y: 120, minX: 170, maxX: 220, window: back)])
+    }
+
+    @Test func windowBehindDoesNotCutTheTopInFront() {
+        let front = Box(x: 100, y: 120, width: 120, height: 60, id: 1)
+        let back = Box(x: 130, y: 100, width: 40, height: 60, id: 2)
+        let tops = World(occluders: [front, back]).surfaces(on: stage).filter { $0.window == front }
+        #expect(tops == [Platform(y: 120, minX: 100, maxX: 220, window: front)])
+    }
+
+    @Test func ledgesOnlyAtRealWindowEdges() {
+        let front = Box(x: 130, y: 100, width: 40, height: 60, id: 1)
+        let back = Box(x: 100, y: 120, width: 120, height: 60, id: 2)
+        let ledges = World(occluders: [front, back]).ledges(on: stage, room: 8).filter { $0.top.window == back }
+        #expect(ledges.map(\.edge).sorted() == [100, 220])
+    }
+
+    @Test func petIsHiddenOnlyByWindowsInFrontOfIt() {
+        let front = Box(x: 0, y: 40, width: 60, height: 60, id: 1)
+        let back = Box(x: 100, y: 120, width: 80, height: 60, id: 2)
+        var pet = Pet(stage: stage)
+        pet.world = World(occluders: [front, back])
+        #expect(pet.hidingWindows == 2)
+        pet.drop(atCenter: 140)
+        for _ in 0..<150 { pet.beginTick(0.02) }
+        #expect(pet.feet == 120)
+        #expect(pet.hidingWindows == 1)
+        pet.cover = .behind(back)
+        #expect(pet.hidingWindows == 2)
+        pet.cover = .inFront(of: front)
+        #expect(pet.hidingWindows == 0)
     }
 
     @Test func windowsTouchingMenuBarHaveNoPlatform() {

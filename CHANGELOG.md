@@ -20,6 +20,7 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 ### Fixed
 - Screen play no longer gets stuck in one place: the yarn ball, toy mouse, laser dot and butterfly now appear on the window your pet is standing on, fall off edges, and lead it across all your windows instead of along the bottom of the screen.
 - The pet no longer gets stuck on a window that touches the edge of the screen.
+- During screen play the pet respects which window is in front: it no longer walks along edges covered by another window, and standing on a window it is hidden only by the windows in front of that one, not by every window on screen.
 
 ## [1.0.0] - 2026-11-18
 

@@ -29,6 +29,8 @@ public final class PetSimulation {
 
     public var isPurring: Bool { purrTime > 0 }
 
+    public var hidingWindows: Int { pet.hidingWindows }
+
     public func setActivity(_ new: Activity) {
         guard new != activity else { return }
         activity = new

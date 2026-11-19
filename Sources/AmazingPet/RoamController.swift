@@ -17,6 +17,7 @@ final class RoamController {
     private var startedAt = 0.0
     private var lastTick = 0.0
     private var lastScan = 0.0
+    private var windowRects: [CGRect] = []
 
     var isRoaming: Bool { window != nil }
 
@@ -73,6 +74,7 @@ final class RoamController {
         if let next = director.update(now: now, idleSeconds: idle, available: available) { simulation.setActivity(next) }
         simulation.step(min(now - lastTick, 0.25))
         lastTick = now
+        view.setOcclusion(Array(windowRects.prefix(simulation.hidingWindows)))
         view.render(simulation.snapshot())
     }
 
@@ -81,7 +83,8 @@ final class RoamController {
         lastScan = now
         let result = WindowScanner.scan(overlay: window.frame, stage: stage, pixel: Self.pixel)
         simulation.world = result.world
-        view.setOcclusion(result.maskRects)
+        windowRects = result.maskRects
+        view.setOcclusion(Array(windowRects.prefix(simulation.hidingWindows)))
     }
 
     private static func makeWindow(frame: NSRect) -> NSWindow {

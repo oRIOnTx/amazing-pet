@@ -1,3 +1,8 @@
+enum Cover: Equatable {
+    case inFront(of: Box)
+    case behind(Box)
+}
+
 struct Pet {
     static let width = 16.0
     static let height = 12.0
@@ -14,11 +19,14 @@ struct Pet {
     var pause = 0.0
     private var fall: Fall
     private(set) var clinging = false
+    private(set) var footing: Platform
+    var cover: Cover?
 
     init(stage: Stage = .menuBar) {
         self.stage = stage
         x = min(14, stage.width - Self.width)
         fall = Fall(feet: stage.height)
+        footing = Platform(y: stage.height, minX: 0, maxX: stage.width)
     }
 
     var feet: Double { fall.feet }
@@ -37,6 +45,18 @@ struct Pet {
         moving = false
         if pause > 0 { pause -= dt }
         if !clinging { fall.update(dt, x: center, world: world, on: stage) }
+        if supported { footing = lane }
+    }
+
+    var hidingWindows: Int {
+        let reference: (box: Box, behind: Bool)?
+        switch cover {
+        case .inFront(let box): reference = (box, false)
+        case .behind(let box): reference = (box, true)
+        case nil: reference = footing.window.map { ($0, false) }
+        }
+        guard let reference, let index = world.depth(of: reference.box) else { return world.occluders.count }
+        return reference.behind ? index + 1 : index
     }
 
     mutating func walk(toward target: Double, speed: Double, dt: Double) {
@@ -70,6 +90,7 @@ struct Pet {
     }
 
     mutating func letGo() {
+        cover = nil
         guard clinging else { return }
         clinging = false
         fall.release(from: feet)

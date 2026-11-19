@@ -33,6 +33,7 @@ struct ClimbBehavior: Behavior {
             pet.letGo()
             rest(for: 1)
         }
+        defer { pet.cover = pet.clinging ? wall.top.window.map { .inFront(of: $0) } : nil }
         let boost = pet.stage.travelBoost
         switch phase {
         case .approaching:
