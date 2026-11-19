@@ -24,7 +24,7 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - Small types with one responsibility and clear patterns: strategy per activity, pure logic separated from AppKit.
 - All logic lives in `AmazingPetCore` and is covered by tests. AppKit glue in `AmazingPet` stays thin.
 - Keep it light: no per-frame drawing, pre-rendered sprites, low timer rates, no extra dependencies.
-- No network access, analytics or telemetry. The app reads only what it needs locally (CPU, memory, window frames).
+- No network access, analytics or telemetry. The app reads only what it needs locally (CPU, memory, window frames and owner bundle IDs). Anything that needs a macOS permission (Accessibility for Dock icons, Finder automation for desktop icons) is optional, requested only from the Permissions menu or the `--grant-*` commands, and the app must work fully without it.
 
 ## Localization
 - All user-facing text lives in `Sources/AmazingPet/L10n.swift`. Never hardcode UI strings elsewhere.
@@ -52,6 +52,7 @@ This is an openly vibe-coded project: most of the code is written by Claude Code
 - `./install.sh`: build, install to Applications, launch (registers launch at login).
 - `VERSION=1.2.3 ./package.sh`: build (signed and notarized when the env is set) and write `.dmg`, `.zip` and `SHA256SUMS.txt` to `dist/`. `ARCHS="arm64 x86_64"` builds a universal binary.
 - `AmazingPet --export-docs <dir>`: regenerate all README images and GIFs.
+- `open -n build/AmazingPet.app --args --grant-dock-access|--grant-desktop-access`: ask macOS for the optional Accessibility or Finder automation permission. Launch through `open` so the request comes from the app, not from Terminal.
 - `AmazingPet --export-preview|--export-species|--export-roam|--export-builder|--export-icon <path>`: render menu bar scenes, all species, on-screen roam games, builder window or iconset to PNG for visual checks.
 
 ## CI / Releases

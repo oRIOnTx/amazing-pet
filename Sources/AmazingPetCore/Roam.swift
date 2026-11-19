@@ -37,6 +37,7 @@ public struct RoamDirector {
             case .peekOver: !world.windowTops(on: stage).isEmpty
             case .hang: world.surfaces(on: stage).contains { $0.y - Pet.height <= HangBehavior.reach && $0.width >= Pet.width }
             case .gnaw: !world.ledges(on: stage, room: GnawBehavior.room).isEmpty
+            case .nibbleIcon: !world.visibleIcons(on: stage).isEmpty
             default: true
             }
         }

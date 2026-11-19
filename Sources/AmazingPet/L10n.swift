@@ -32,6 +32,14 @@ enum L10n {
     static var roamMenu: String { tr("menu.roam", "Play on screen when I'm away") }
     static var roamOff: String { tr("menu.roam.off", "Off") }
     static var roamNow: String { tr("menu.roam.now", "Play now") }
+    static var permissionsMenu: String { tr("menu.permissions", "Permissions") }
+
+    static func title(_ permission: Permission) -> String {
+        switch permission {
+        case .dockIcons: tr("menu.permission.dock", "Nibble Dock icons (Accessibility)…")
+        case .desktopIcons: tr("menu.permission.desktop", "Play with desktop icons (Finder)…")
+        }
+    }
 
     static func roamAfter(minutes: Int) -> String {
         String(format: tr("menu.roam.after", "After %d min"), minutes)
@@ -79,6 +87,7 @@ enum L10n {
         case .peekOver: tr("toy.peekOver", "Pop-up peeking")
         case .hang: tr("toy.hang", "Ceiling hang")
         case .gnaw: tr("toy.gnaw", "Corner nibbling")
+        case .nibbleIcon: tr("toy.nibbleIcon", "Icon nibbling")
         case .zoomies: tr("toy.zoomies", "Zoomies")
         case .butterfly: tr("toy.butterfly", "Butterfly")
         case .explore: tr("toy.explore", "Exploring windows")
@@ -126,6 +135,7 @@ enum L10n {
         case .peekOver: tr("status.peekOver", "%@ is popping up from behind a window 👀")
         case .hang: tr("status.hang", "%@ is hanging from the menu bar 🙃")
         case .gnaw: tr("status.gnaw", "%@ is nibbling the corner of a window 😬")
+        case .nibbleIcon: tr("status.nibbleIcon", "%@ is nibbling an icon (it's only pretend) 🍪")
         case .zoomies: tr("status.zoomies", "%@ has the zoomies 💨")
         case .butterfly: tr("status.butterfly", "%@ is chasing a butterfly 🦋")
         case .explore: tr("status.explore", "%@ is exploring your windows 🧗")

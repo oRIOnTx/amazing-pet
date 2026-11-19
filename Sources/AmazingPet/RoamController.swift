@@ -5,6 +5,7 @@ final class RoamController {
     private static let pixel: CGFloat = 4
     private static let fps = 15.0
     private static let scanInterval = 1.0
+    private static let iconScanInterval = 5.0
 
     private let settings: Settings
     private let onFinish: () -> Void
@@ -18,6 +19,8 @@ final class RoamController {
     private var lastTick = 0.0
     private var lastScan = 0.0
     private var windowRects: [CGRect] = []
+    private var icons: [Icon] = []
+    private var lastIconScan = -Double.infinity
 
     var isRoaming: Bool { window != nil }
 
@@ -29,7 +32,8 @@ final class RoamController {
     func start(spawnX: CGFloat?) {
         guard !isRoaming, let screen = NSScreen.screens.first else { return }
         let area = screen.visibleFrame
-        stage = Stage.roam(width: area.width / Self.pixel, height: area.height / Self.pixel)
+        let height = area.maxY - screen.frame.minY
+        stage = Stage.roam(width: area.width / Self.pixel, height: height / Self.pixel, floor: area.height / Self.pixel)
         let size = NSSize(width: stage.width * Self.pixel, height: stage.height * Self.pixel)
         let frame = NSRect(x: area.minX, y: area.maxY - size.height, width: size.width, height: size.height)
         let view = PetView(frame: NSRect(origin: .zero, size: size), stage: stage, pixel: Self.pixel)
@@ -58,6 +62,8 @@ final class RoamController {
         window = nil
         view = nil
         simulation = nil
+        icons = []
+        lastIconScan = -Double.infinity
     }
 
     private func tick() {
@@ -81,8 +87,14 @@ final class RoamController {
     private func scan(now: Double) {
         guard let window, let simulation, let view else { return }
         lastScan = now
+        if now - lastIconScan >= Self.iconScanInterval {
+            lastIconScan = now
+            icons = IconScanner.scan(overlay: window.frame, pixel: Self.pixel)
+        }
         let result = WindowScanner.scan(overlay: window.frame, stage: stage, pixel: Self.pixel)
-        simulation.world = result.world
+        var world = result.world
+        world.icons = icons
+        simulation.world = world
         windowRects = result.maskRects
         view.setOcclusion(Array(windowRects.prefix(simulation.hidingWindows)))
     }

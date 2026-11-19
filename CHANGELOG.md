@@ -13,6 +13,7 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 - Every animal now plays in its own way, picked by CPU load: the dog chews a bone, plays fetch and chases its tail; the fox sniffs around, pounces into the snow and chases a falling leaf; the rabbit nibbles a carrot, hops and does binkies; the hamster stuffs its cheeks, rolls in a ball and runs in its wheel; the bird pecks grain, flutters and flies; the fish blows bubbles, catches food flakes and darts around; the turtle munches lettuce, strolls and races to a strawberry. The cat keeps its yarn ball, toy mouse and laser.
 - The toy menu lists your animal's own toys, and a chosen toy carries over to the matching one when you switch animals.
 - During screen play the pet reacts to the app whose window it stands on: it types on terminals and code editors, dances on music players and shows a typing bubble on chat and mail apps.
+- Optional icon play: once you allow it from the new **Permissions** menu, your pet hops onto desktop icons and pretends to nibble desktop and Dock icons, leaving teeth marks that fade and a few crumbs. Nothing is opened, moved or changed, and without the permission everything works as before.
 - New screen games: your pet climbs up the side of a window and slides down, sits on a window edge with its legs dangling, knocks a flower pot off a window, nibbles window corners, hunts for its favorite toy hidden behind your windows, pops its head up from behind a window and hangs upside down from the menu bar.
 
 ### Changed

@@ -14,6 +14,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     private var modeItems: [(item: NSMenuItem, mode: Mode)] = []
     private var languageItems: [(item: NSMenuItem, language: AppLanguage)] = []
     private var roamItems: [(item: NSMenuItem, minutes: Int)] = []
+    private var permissionItems: [(item: NSMenuItem, permission: Permission)] = []
     private var builtSpecies: Species?
     private let onCustomize: () -> Void
     private let onLanguageChange: () -> Void
@@ -36,6 +37,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         modeItems = []
         languageItems = []
         roamItems = []
+        permissionItems = []
         let species = settings.profile.look.species
         builtSpecies = species
 
@@ -68,6 +70,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         loginItem.target = self
         menu.addItem(indicatorsItem)
         menu.addItem(roamMenuItem())
+        menu.addItem(permissionsMenuItem())
         menu.addItem(loginItem)
         menu.addItem(languageMenuItem())
         menu.addItem(.separator())
@@ -85,6 +88,19 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         submenu.addItem(.separator())
         submenu.addItem(action(L10n.roamNow, #selector(roamNow)))
         let item = NSMenuItem(title: L10n.roamMenu, action: nil, keyEquivalent: "")
+        item.submenu = submenu
+        return item
+    }
+
+    private func permissionsMenuItem() -> NSMenuItem {
+        let submenu = NSMenu()
+        for permission in Permission.allCases {
+            let item = action(L10n.title(permission), #selector(requestPermission(_:)))
+            item.tag = permissionItems.count
+            permissionItems.append((item, permission))
+            submenu.addItem(item)
+        }
+        let item = NSMenuItem(title: L10n.permissionsMenu, action: nil, keyEquivalent: "")
         item.submenu = submenu
         return item
     }
@@ -126,6 +142,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         for (item, itemMode) in modeItems { item.state = itemMode == mode ? .on : .off }
         for (item, language) in languageItems { item.state = language == settings.language ? .on : .off }
         for (item, minutes) in roamItems { item.state = minutes == settings.roamDelayMinutes ? .on : .off }
+        for (item, permission) in permissionItems { item.state = permission.isGranted ? .on : .off }
         indicatorsItem.state = settings.indicatorsEnabled ? .on : .off
         loginItem.state = LoginItem.isEnabled ? .on : .off
     }
@@ -153,6 +170,10 @@ final class StatusMenu: NSObject, NSMenuDelegate {
 
     @objc private func selectRoamDelay(_ sender: NSMenuItem) {
         settings.roamDelayMinutes = sender.tag
+    }
+
+    @objc private func requestPermission(_ sender: NSMenuItem) {
+        permissionItems[sender.tag].permission.request()
     }
 
     @objc private func roamNow() {

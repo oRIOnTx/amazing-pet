@@ -29,6 +29,8 @@
     <string>14.0</string>
     <key>LSUIElement</key>
     <true/>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Amazing Pet asks Finder where your desktop icons are, so your pet can hop on them and pretend to nibble them. It never opens, moves or changes anything.</string>
     <key>NSHighResolutionCapable</key>
     <true/>
 </dict>

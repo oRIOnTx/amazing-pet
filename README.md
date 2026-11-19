@@ -78,6 +78,17 @@ Turn on **Play on screen when I'm away** (after 1, 3, 5 or 10 minutes), or try *
 
 Move the mouse or press any key and it's instantly back in the menu bar. It never starts while a video, call or presentation is keeping your display awake, and clicks always pass straight through it.
 
+#### 🍪 Optional: icons to play with
+
+If you want, your pet can also hop onto your desktop icons and pretend to nibble your desktop and Dock icons, leaving teeth marks that fade away and a few crumbs. It's only drawn on the pet's own transparent layer; nothing is opened, moved or changed. This needs a permission that Amazing Pet never asks for on its own. Grant it from **Permissions** in the menu, or from Terminal:
+
+| What | Permission | Menu item | Command |
+|---|---|---|---|
+| Dock icons | Accessibility (to read where the Dock icons are) | **Permissions → Nibble Dock icons (Accessibility)…** | `open -n /Applications/AmazingPet.app --args --grant-dock-access` |
+| Desktop icons | Automation of Finder (to ask where the desktop icons are) | **Permissions → Play with desktop icons (Finder)…** | `open -n /Applications/AmazingPet.app --args --grant-desktop-access` |
+
+A checkmark in the menu shows what's granted. To take a permission back, switch it off in **System Settings → Privacy & Security → Accessibility** or **→ Automation**. Use `open` as shown rather than running the binary directly, otherwise macOS asks on behalf of Terminal. Because builds are ad-hoc signed, macOS may forget the Accessibility permission after an update; just turn it off and on again.
+
 ### 🐾 Build your own pet
 
 <p align="center"><img src="docs/images/builder.png" alt="Pet builder window" width="400"></p>
@@ -99,7 +110,7 @@ Switch the language from the menu (**Language → System default / English / У�
 - Sprites are rendered once. Each frame only moves a few Core Animation layers, so there is no per-frame drawing.
 - 4–15 fps depending on the activity, and everything pauses when the display sleeps.
 - About **0.1% CPU and ~13 MB of RAM** on Apple silicon.
-- No network access, no analytics and no special permissions. Screen play reads only window *frames*, never their contents.
+- No network access and no analytics. By default no special permissions: screen play reads only window *frames* and the owning app's bundle ID, never window titles or contents. Icon play is optional and uses a permission only after you grant it.
 
 ---
 

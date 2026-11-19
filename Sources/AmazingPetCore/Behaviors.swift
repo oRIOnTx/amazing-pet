@@ -300,7 +300,7 @@ struct ButterflyBehavior: Behavior {
 
     func scene(_ pet: Pet, clock: Double) -> SceneSnapshot {
         let wobble = (sin(flutter * 5) * 1.5).rounded()
-        let y = (position.y + wobble).clamped(to: 0...(pet.stage.height - 4))
+        let y = (position.y + wobble).clamped(to: 0...(pet.stage.floor - 4))
         return SceneSnapshot(
             pet: pet.item(pet.walkingSprite),
             prop: .init(sprite: frames[Int(flutter * 8) % frames.count], x: position.x.rounded(), y: y.rounded())

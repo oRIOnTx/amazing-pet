@@ -2,6 +2,11 @@ import AppKit
 
 let arguments = CommandLine.arguments
 L10n.language = Settings().language
+let grants: [String: Permission] = ["--grant-dock-access": .dockIcons, "--grant-desktop-access": .desktopIcons]
+if arguments.count >= 2, let permission = grants[arguments[1]] {
+    permission.requestAndWait()
+    exit(0)
+}
 if arguments.count >= 3, arguments[1].hasPrefix("--export") {
     let target = URL(fileURLWithPath: arguments[2])
     switch arguments[1] {

@@ -574,3 +574,76 @@ struct GnawBehavior: Behavior {
         return SceneSnapshot(pet: pet.item(sprite), effects: effects)
     }
 }
+
+struct NibbleIconBehavior: Behavior {
+    static let biteFade = 4.0
+
+    private let dice: Dice
+    private var fallback: ExploreBehavior
+    private(set) var icon: Icon?
+    private(set) var nibbling = false
+    private(set) var nibbled = 0
+    private var crumbs: [(x: Double, fall: Fall)] = []
+    private var bite: (x: Double, y: Double, age: Double)?
+    private var timer = 0.0
+    private var nextCrumb = 0.0
+
+    init(pet: Pet, dice: Dice) {
+        self.dice = dice
+        fallback = ExploreBehavior(pet: pet, dice: dice)
+        icon = pick(pet.world.visibleIcons(on: pet.stage), dice: dice)
+    }
+
+    private func perch(for icon: Icon, stage: Stage) -> Goal {
+        Goal(surface: icon.onDock ? stage.floor : icon.box.minY.rounded(.down), x: icon.center)
+    }
+
+    mutating func step(_ pet: inout Pet, dt: Double, speed: Double) {
+        if var current = bite {
+            current.age += dt
+            bite = current.age < Self.biteFade ? current : nil
+        }
+        for index in crumbs.indices { crumbs[index].fall.update(dt, x: crumbs[index].x, world: pet.world, on: pet.stage) }
+        crumbs.removeAll { $0.fall.supported || $0.fall.feet > pet.stage.height }
+        guard let icon, pet.world.visibleIcons(on: pet.stage).contains(icon) else {
+            nibbling = false
+            self.icon = pick(pet.world.visibleIcons(on: pet.stage), dice: dice)
+            fallback.step(&pet, dt: dt, speed: speed)
+            return
+        }
+        guard nibbling else {
+            guard Navigator.step(&pet, to: perch(for: icon, stage: pet.stage), speed: 16 * speed * pet.stage.travelBoost, dt: dt)
+            else { return }
+            nibbling = true
+            timer = dice(4...7)
+            bite = (icon.center - 3, icon.box.minY + 1, 0)
+            return
+        }
+        bite?.age = 0
+        nextCrumb -= dt * speed
+        if nextCrumb <= 0, crumbs.count < 2 {
+            var fall = Fall(feet: icon.box.minY + 2)
+            fall.release(from: icon.box.minY + 2)
+            crumbs.append((icon.center + dice(-5...5), fall))
+            nextCrumb = dice(0.4...0.9)
+        }
+        timer -= dt
+        guard timer <= 0 else { return }
+        nibbling = false
+        nibbled += 1
+        pet.pause = dice(0.8...1.6)
+        self.icon = pick(pet.world.visibleIcons(on: pet.stage), dice: dice)
+    }
+
+    func scene(_ pet: Pet, clock: Double) -> SceneSnapshot {
+        guard icon != nil || bite != nil else { return fallback.scene(pet, clock: clock) }
+        let effects = crumbs.map { SceneSnapshot.Item(sprite: Sprites.crumb, x: ($0.x - 1).rounded(), y: ($0.fall.feet - 2).rounded()) }
+        let mark = bite.map {
+            SceneSnapshot.Item(
+                sprite: Sprites.bite, x: $0.x.rounded(), y: $0.y.rounded(), opacity: Float(1 - $0.age / Self.biteFade)
+            )
+        }
+        let sprite = nibbling ? (Int(clock * 5) % 2 == 0 ? pet.sprites.rest : pet.sprites.walk[0]) : pet.walkingSprite
+        return SceneSnapshot(pet: pet.item(sprite), prop: mark, effects: effects)
+    }
+}

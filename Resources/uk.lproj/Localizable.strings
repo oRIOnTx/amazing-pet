@@ -9,6 +9,9 @@
 "language.system" = "Як у системі";
 "menu.roam" = "Гратися на екрані, коли мене нема";
 "menu.roam.off" = "Вимкнено";
+"menu.permissions" = "Дозволи";
+"menu.permission.dock" = "Гризти іконки Dock (Доступність)…";
+"menu.permission.desktop" = "Гратися з іконками робочого столу (Finder)…";
 "menu.roam.now" = "Пограти зараз";
 "menu.roam.after" = "Через %d хв";
 "error.login" = "Не вдалося змінити автозапуск";
@@ -52,6 +55,7 @@
 "toy.peekOver" = "Визирання";
 "toy.hang" = "Під стелею";
 "toy.gnaw" = "Гризіння";
+"toy.nibbleIcon" = "Гризіння іконок";
 "toy.zoomies" = "Шалені перегони";
 "toy.butterfly" = "Метелик";
 "toy.explore" = "Досліджує вікна";
@@ -95,6 +99,7 @@
 "status.peekOver" = "%@ визирає з-за вікна 👀";
 "status.hang" = "%@ висить під смугою меню 🙃";
 "status.gnaw" = "%@ гризе куточок вікна 😬";
+"status.nibbleIcon" = "%@ гризе іконку (понарошку) 🍪";
 "status.zoomies" = "%@ шалено гасає 💨";
 "status.butterfly" = "%@ полює на метелика 🦋";
 "status.explore" = "%@ досліджує вікна 🧗";

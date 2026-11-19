@@ -56,16 +56,30 @@ struct Ledge: Equatable {
     var outward: Double { right ? 1 : -1 }
 }
 
+public struct Icon: Equatable {
+    public let box: Box
+    public let onDock: Bool
+
+    public init(box: Box, onDock: Bool) {
+        self.box = box
+        self.onDock = onDock
+    }
+
+    var center: Double { (box.minX + box.maxX) / 2 }
+}
+
 public struct World: Equatable {
     public static let minimumWindowSize = (width: 30.0, height: 20.0)
     public static let maximumScreenShare = 0.7
 
     public var occluders: [Box]
     public var cursor: (x: Double, y: Double)?
+    public var icons: [Icon]
 
-    public init(occluders: [Box] = [], cursor: (x: Double, y: Double)? = nil) {
+    public init(occluders: [Box] = [], cursor: (x: Double, y: Double)? = nil, icons: [Icon] = []) {
         self.occluders = occluders
         self.cursor = cursor
+        self.icons = icons
     }
 
     public static func isOccluder(_ box: Box, on stage: Stage) -> Bool {
@@ -76,14 +90,15 @@ public struct World: Equatable {
     }
 
     public static func == (lhs: World, rhs: World) -> Bool {
-        lhs.occluders == rhs.occluders && lhs.cursor?.x == rhs.cursor?.x && lhs.cursor?.y == rhs.cursor?.y
+        lhs.occluders == rhs.occluders && lhs.icons == rhs.icons
+            && lhs.cursor?.x == rhs.cursor?.x && lhs.cursor?.y == rhs.cursor?.y
     }
 
     func surfaces(on stage: Stage) -> [Platform] {
-        let ground = Platform(y: stage.height, minX: 0, maxX: stage.width)
+        let ground = Platform(y: stage.floor, minX: 0, maxX: stage.width)
         let tops = occluders.enumerated().flatMap { index, box -> [Platform] in
             let y = box.minY.rounded(.down)
-            guard y > Pet.height + 2, y < stage.height else { return [] }
+            guard y > Pet.height + 2, y < stage.floor else { return [] }
             let covers = occluders[..<index]
                 .filter { $0.minY < y && $0.maxY > y - Pet.height }
                 .map { ($0.minX, $0.maxX) }
@@ -91,7 +106,23 @@ public struct World: Equatable {
                 .filter { $0.1 - $0.0 >= Pet.width }
                 .map { Platform(y: y, minX: $0.0, maxX: $0.1, window: box) }
         }
-        return tops + [ground]
+        return tops + iconTops(on: stage) + [ground]
+    }
+
+    private func iconTops(on stage: Stage) -> [Platform] {
+        visibleIcons(on: stage).filter { !$0.onDock }.compactMap { icon in
+            let y = icon.box.minY.rounded(.down)
+            guard y > Pet.height + 2, y < stage.floor, icon.box.maxX - icon.box.minX >= Pet.width else { return nil }
+            return Platform(y: y, minX: max(0, icon.box.minX), maxX: min(stage.width, icon.box.maxX))
+        }
+    }
+
+    func visibleIcons(on stage: Stage) -> [Icon] {
+        icons.filter { icon in
+            let box = icon.box
+            guard box.minX >= 0, box.maxX <= stage.width, box.minY >= 0, box.maxY <= stage.height else { return false }
+            return icon.onDock || !occluders.contains { $0.overlaps(x: box.minX...box.maxX, y: (box.minY - Pet.height)...box.maxY) }
+        }
     }
 
     static func subtract(_ cuts: [(Double, Double)], from span: (Double, Double)) -> [(Double, Double)] {
@@ -141,7 +172,7 @@ public struct World: Equatable {
     }
 
     func windowTops(on stage: Stage, minWidth: Double = Pet.width + 4) -> [Platform] {
-        surfaces(on: stage).filter { $0.y < stage.height && $0.width >= minWidth }
+        surfaces(on: stage).filter { $0.window != nil && $0.width >= minWidth }
     }
 
     func ledges(on stage: Stage, room: Double, minWidth: Double = Pet.width + 4) -> [Ledge] {

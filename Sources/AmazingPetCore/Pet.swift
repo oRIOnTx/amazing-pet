@@ -25,8 +25,8 @@ struct Pet {
     init(stage: Stage = .menuBar) {
         self.stage = stage
         x = min(14, stage.width - Self.width)
-        fall = Fall(feet: stage.height)
-        footing = Platform(y: stage.height, minX: 0, maxX: stage.width)
+        fall = Fall(feet: stage.floor)
+        footing = Platform(y: stage.floor, minX: 0, maxX: stage.width)
     }
 
     var feet: Double { fall.feet }
@@ -35,7 +35,7 @@ struct Pet {
     var maxX: Double { stage.width - Self.width }
     var ground: Double { stage.ground }
     var top: Double { feet - Self.height }
-    var lift: Double { stage.height - feet }
+    var lift: Double { stage.floor - feet }
     var center: Double { x + Self.width / 2 }
     var isPaused: Bool { pause > 0 }
     var isAirborne: Bool { !fall.supported && !clinging }
@@ -102,7 +102,7 @@ struct Pet {
             stand(on: landing)
             return true
         }
-        fall.hold(at: min(target, stage.height))
+        fall.hold(at: min(target, stage.floor))
         return false
     }
 

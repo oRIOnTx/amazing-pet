@@ -89,7 +89,11 @@ struct WorldTests {
         #expect(!empty.contains(.hunt))
         #expect(!empty.contains(.peekOver))
         #expect(!empty.contains(.gnaw))
-        let rich = World(occluders: [Box(x: 50, y: 150, width: 60, height: 50), Box(x: 180, y: 60, width: 60, height: 40)], cursor: (10, 10))
+        #expect(!empty.contains(.nibbleIcon))
+        let rich = World(
+            occluders: [Box(x: 50, y: 150, width: 60, height: 50), Box(x: 180, y: 60, width: 60, height: 40)], cursor: (10, 10),
+            icons: [Icon(box: Box(x: 260, y: 150, width: 18, height: 18), onDock: false)]
+        )
         #expect(RoamDirector.availableGames(in: rich, on: stage) == Activity.roamGames(for: .cat))
         #expect(RoamDirector.availableGames(in: rich, on: stage, species: .dog).contains(.fetch))
     }
@@ -389,5 +393,54 @@ struct WindowKindTests {
             reacted = scene.pet.y + Pet.height <= window.minY && scene.effects.contains { $0.sprite === effect }
         }
         #expect(reacted)
+    }
+}
+
+struct IconPlayTests {
+    let stage = Stage(width: 200, height: 130, floor: 110)
+    let dockIcon = Icon(box: Box(x: 90, y: 114, width: 14, height: 14), onDock: true)
+    let desktopIcon = Icon(box: Box(x: 160, y: 60, width: 18, height: 18), onDock: false)
+
+    @Test func floorSitsAboveTheDock() {
+        var pet = Pet(stage: stage)
+        for _ in 0..<50 { pet.beginTick(0.02) }
+        #expect(pet.feet == 110)
+        #expect(World().surfaces(on: stage).last == Platform(y: 110, minX: 0, maxX: 200))
+    }
+
+    @Test func desktopIconsArePlatformsUnlessAWindowCoversThem() {
+        let open = World(icons: [desktopIcon])
+        #expect(open.surfaces(on: stage).contains(Platform(y: 60, minX: 160, maxX: 178)))
+        let covered = World(occluders: [Box(x: 150, y: 40, width: 40, height: 50)], icons: [desktopIcon])
+        #expect(covered.visibleIcons(on: stage).isEmpty)
+        #expect(!covered.surfaces(on: stage).contains { $0.y == 60 && $0.window == nil })
+    }
+
+    @Test func dockIconsAreNeverPlatforms() {
+        #expect(World(icons: [dockIcon]).surfaces(on: stage).count == 1)
+    }
+
+    private func nibble(_ icons: Icon..., seconds: Double) -> [SceneSnapshot] {
+        let simulation = PetSimulation(stage: stage, activity: .nibbleIcon, dice: Dice(seed: 2))
+        simulation.world = World(icons: icons)
+        return (0..<Int(seconds / 0.05)).map { _ in
+            simulation.step(0.05)
+            return simulation.snapshot()
+        }
+    }
+
+    @Test func nibblesADockIconFromTheFloorWithFadingTeethMarks() {
+        let otherIcon = Icon(box: Box(x: 20, y: 114, width: 14, height: 14), onDock: true)
+        let all = nibble(dockIcon, otherIcon, seconds: 40)
+        let marked = all.filter { $0.prop?.sprite === Sprites.bite }
+        #expect(!marked.isEmpty)
+        #expect(marked.allSatisfy { $0.pet.y + Pet.height == stage.floor && $0.prop!.y > stage.floor })
+        #expect(all.flatMap(\.effects).contains { $0.sprite === Sprites.crumb && $0.y > stage.floor })
+        #expect(marked.contains { $0.prop!.opacity < 1 })
+    }
+
+    @Test func hopsOntoADesktopIconToNibbleIt() {
+        let all = nibble(desktopIcon, seconds: 20)
+        #expect(all.contains { $0.pet.y + Pet.height == desktopIcon.box.minY && $0.prop?.sprite === Sprites.bite })
     }
 }

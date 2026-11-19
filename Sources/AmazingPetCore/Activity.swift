@@ -2,11 +2,12 @@ public enum Activity: String, CaseIterable {
     case sleep, yarn, mouse, laser
     case bone, fetch, tailChase, sniff, pounce, leaf, carrot, hop, binky, seeds, hamsterBall, wheel
     case peck, flutter, fly, bubbles, flakes, dart, lettuce, stroll, strawberry
-    case zoomies, butterfly, explore, peekaboo, cursor, perch, climb, ledge, knock, hunt, peekOver, hang, gnaw
+    case zoomies, butterfly, explore, peekaboo, cursor, perch, climb, ledge, knock, hunt, peekOver, hang, gnaw, nibbleIcon
     case overheated, memoryTight, memoryFull, hungry
 
     public static let worldGames: [Activity] = [
-        .explore, .peekaboo, .cursor, .climb, .ledge, .knock, .hunt, .peekOver, .hang, .gnaw, .zoomies, .butterfly,
+        .explore, .peekaboo, .cursor, .climb, .ledge, .knock, .hunt, .peekOver, .hang, .gnaw, .nibbleIcon, .zoomies,
+        .butterfly,
     ]
     public static let allToys: [Activity] = Species.allCases.flatMap(\.toys)
     public static let alerts: [Activity] = [.overheated, .memoryTight, .memoryFull, .hungry]
@@ -23,7 +24,7 @@ public enum Activity: String, CaseIterable {
         switch self {
         case .sleep, .overheated, .memoryTight, .memoryFull, .hungry: 4
         case .bone, .carrot, .seeds, .peck, .lettuce, .sniff, .bubbles, .stroll, .flakes: 8
-        case .explore, .peekaboo, .cursor, .perch, .climb, .ledge, .knock, .hunt, .peekOver, .hang, .gnaw: 15
+        case .explore, .peekaboo, .cursor, .perch, .climb, .ledge, .knock, .hunt, .peekOver, .hang, .gnaw, .nibbleIcon: 15
         case .yarn, .strawberry: 10
         case .mouse, .butterfly, .leaf, .hop, .binky, .pounce, .flutter, .tailChase, .fly, .wheel: 12
         case .laser, .zoomies, .fetch, .dart, .hamsterBall: 15
@@ -70,6 +71,7 @@ public enum Activity: String, CaseIterable {
         case .peekOver: return PeekOverBehavior(pet: pet, dice: dice)
         case .hang: return HangBehavior(pet: pet, dice: dice)
         case .gnaw: return GnawBehavior(pet: pet, dice: dice)
+        case .nibbleIcon: return NibbleIconBehavior(pet: pet, dice: dice)
         case .overheated: return alert(.overheated, pet: &pet)
         case .memoryTight: return alert(.memoryTight(pet.sprites.home), pet: &pet)
         case .memoryFull: return alert(.memoryFull(pet.sprites.home), pet: &pet)

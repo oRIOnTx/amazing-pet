@@ -374,7 +374,7 @@ struct FlyBehavior: Behavior {
         }
         let reach = min(distance, 30 * speed * pet.stage.travelBoost * dt)
         pet.walk(toward: target.x, speed: reach * abs(dx) / distance / dt, dt: dt)
-        pet.cling(at: (pet.feet + dy / distance * reach).clamped(to: Pet.height...pet.stage.height))
+        pet.cling(at: (pet.feet + dy / distance * reach).clamped(to: Pet.height...pet.stage.floor))
     }
 
     private func next(_ pet: Pet) -> (x: Double, feet: Double) {
