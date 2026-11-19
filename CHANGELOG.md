@@ -10,6 +10,8 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 
 ### Added
 - Every animal now has its own home: a basket for the cat, a kennel for the dog, a den for the fox, a burrow with a carrot for the rabbit, a cage with a wheel for the hamster, a birdhouse for the bird, an aquarium for the fish and a rock pile for the turtle.
+- Every animal now plays in its own way, picked by CPU load: the dog chews a bone, plays fetch and chases its tail; the fox sniffs around, pounces into the snow and chases a falling leaf; the rabbit nibbles a carrot, hops and does binkies; the hamster stuffs its cheeks, rolls in a ball and runs in its wheel; the bird pecks grain, flutters and flies; the fish blows bubbles, catches food flakes and darts around; the turtle munches lettuce, strolls and races to a strawberry. The cat keeps its yarn ball, toy mouse and laser.
+- The toy menu lists your animal's own toys, and a chosen toy carries over to the matching one when you switch animals.
 - New screen games: your pet climbs up the side of a window and slides down, sits on a window edge with its legs dangling, and knocks a flower pot off a window.
 
 ### Changed

@@ -25,8 +25,8 @@ public struct RoamDirector {
         switchAt = now + dice(Self.gameLength)
     }
 
-    public static func availableGames(in world: World, on stage: Stage) -> [Activity] {
-        Activity.roamGames.filter { game in
+    public static func availableGames(in world: World, on stage: Stage, species: Species = .cat) -> [Activity] {
+        Activity.roamGames(for: species).filter { game in
             switch game {
             case .peekaboo: !world.hidingSpots(on: stage).isEmpty
             case .cursor: world.cursor != nil
@@ -38,7 +38,7 @@ public struct RoamDirector {
         }
     }
 
-    public mutating func update(now: Double, idleSeconds: Double, available: [Activity] = Activity.roamGames) -> Activity? {
+    public mutating func update(now: Double, idleSeconds: Double, available: [Activity] = Activity.roamGames(for: .cat)) -> Activity? {
         if idleSeconds >= Self.napAfterIdle {
             guard current != .perch else { return nil }
             current = .perch

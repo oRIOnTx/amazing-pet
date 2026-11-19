@@ -69,7 +69,7 @@ final class RoamController {
             return
         }
         if now - lastScan >= Self.scanInterval { scan(now: now) }
-        let available = RoamDirector.availableGames(in: simulation.world, on: stage)
+        let available = RoamDirector.availableGames(in: simulation.world, on: stage, species: simulation.look.species)
         if let next = director.update(now: now, idleSeconds: idle, available: available) { simulation.setActivity(next) }
         simulation.step(min(now - lastTick, 0.25))
         lastTick = now

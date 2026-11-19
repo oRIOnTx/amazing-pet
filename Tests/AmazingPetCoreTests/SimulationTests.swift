@@ -24,7 +24,7 @@ struct SimulationTests {
         }
     }
 
-    @Test(arguments: Activity.toys.filter { $0 != .sleep })
+    @Test(arguments: Species.cat.toys)
     func petChasesToys(activity: Activity) {
         let simulation = PetSimulation(activity: activity, dice: Dice(seed: 1))
         var positions = Set<Double>()

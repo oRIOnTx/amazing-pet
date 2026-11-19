@@ -7,6 +7,26 @@ struct ActivityPolicyTests {
         #expect(ActivityPolicy.toy(for: SystemStatus(cpu: cpu)) == expected)
     }
 
+    @Test(arguments: Species.allCases)
+    func everySpeciesHasItsOwnToyPerLoad(species: Species) {
+        let toys = [0.10, 0.30, 0.80].map { ActivityPolicy.toy(for: SystemStatus(cpu: $0), species: species) }
+        #expect(toys == species.toys)
+        #expect(ActivityPolicy.toy(for: SystemStatus(cpu: 0.02), species: species) == .sleep)
+    }
+
+    @Test func toysAreUniqueToEachSpecies() {
+        #expect(Set(Activity.allToys).count == Species.allCases.count * 3)
+        #expect(Set(Activity.allToys).isDisjoint(with: Activity.worldGames + Activity.alerts + [.sleep]))
+    }
+
+    @Test func savedToyFollowsTheSameLoadTierAfterSpeciesChange() {
+        #expect(Mode.fixed(.mouse).resolved(for: .dog) == .fixed(.fetch))
+        #expect(Mode.fixed(.laser).resolved(for: .fish) == .fixed(.dart))
+        #expect(Mode.fixed(.sleep).resolved(for: .bird) == .fixed(.sleep))
+        #expect(Mode.fixed(.wheel).resolved(for: .hamster) == .fixed(.wheel))
+        #expect(ActivityPolicy.activity(for: SystemStatus(), mode: .fixed(.yarn), indicators: true, species: .turtle) == .lettuce)
+    }
+
     @Test func idleUserMakesCatSleep() {
         let status = SystemStatus(cpu: 0.9, idleSeconds: ActivityPolicy.idleSleepSeconds + 1)
         #expect(ActivityPolicy.toy(for: status) == .sleep)
@@ -40,6 +60,7 @@ struct ActivityPolicyTests {
         #expect(Mode(rawValue: nil) == .auto)
         #expect(Mode(rawValue: "garbage") == .auto)
         #expect(Mode(rawValue: Activity.hungry.rawValue) == .auto)
+        #expect(Mode(rawValue: Activity.fetch.rawValue) == .fixed(.fetch))
     }
 }
 

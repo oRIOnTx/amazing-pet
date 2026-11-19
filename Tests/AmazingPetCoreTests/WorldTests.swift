@@ -50,7 +50,8 @@ struct WorldTests {
         #expect(!empty.contains(.peekaboo))
         #expect(!empty.contains(.cursor))
         let rich = World(occluders: [Box(x: 50, y: 150, width: 60, height: 50)], cursor: (10, 10))
-        #expect(RoamDirector.availableGames(in: rich, on: stage) == Activity.roamGames)
+        #expect(RoamDirector.availableGames(in: rich, on: stage) == Activity.roamGames(for: .cat))
+        #expect(RoamDirector.availableGames(in: rich, on: stage, species: .dog).contains(.fetch))
     }
 }
 

@@ -26,6 +26,30 @@ public enum Species: String, CaseIterable {
 
     var headOffset: Double { 12 }
 
+    public var toys: [Activity] {
+        switch self {
+        case .cat: [.yarn, .mouse, .laser]
+        case .dog: [.bone, .fetch, .tailChase]
+        case .fox: [.sniff, .pounce, .leaf]
+        case .rabbit: [.carrot, .hop, .binky]
+        case .hamster: [.seeds, .hamsterBall, .wheel]
+        case .bird: [.peck, .flutter, .fly]
+        case .fish: [.bubbles, .flakes, .dart]
+        case .turtle: [.lettuce, .stroll, .strawberry]
+        }
+    }
+
+    public var menuToys: [Activity] { [.sleep] + toys }
+
+    public static func owner(of activity: Activity) -> Species? {
+        allCases.first { $0.toys.contains(activity) }
+    }
+
+    public func toy(matching activity: Activity) -> Activity {
+        if menuToys.contains(activity) { return activity }
+        return toys[activity.loadTier ?? 0]
+    }
+
     var home: Home {
         switch self {
         case .cat: .dry(Sprites.basket)

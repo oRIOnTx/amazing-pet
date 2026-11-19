@@ -27,16 +27,22 @@
 
 <p align="center"><img src="docs/images/menubar.gif" alt="Menu bar animation" width="560"></p>
 
-In **Auto** mode the toy follows your CPU load, and the busier your Mac gets, the faster your pet runs:
+In **Auto** mode what your pet does follows your CPU load, and the busier your Mac gets, the faster it moves. Below 4% CPU, or when you're idle, every pet naps 💤. Above that, each animal has its own way to play:
 
-| CPU load | What your pet does |
-|---|---|
-| < 4% or you're idle | 💤 Naps |
-| < 20% | 🧶 Plays with a yarn ball |
-| < 50% | 🐭 Hunts a wind-up toy mouse |
-| ≥ 50% | 🔴 Chases a laser pointer |
+<p align="center"><img src="docs/images/toys.gif" alt="Every animal at low, medium and high load" width="520"></p>
 
-You can also pick a toy manually from the menu.
+| Animal | < 20% CPU | < 50% CPU | ≥ 50% CPU |
+|---|---|---|---|
+| 🐱 Cat | 🧶 Yarn ball | 🐭 Toy mouse | 🔴 Laser pointer |
+| 🐶 Dog | 🦴 Chews a bone | 🎾 Plays fetch | 🌀 Chases its tail until dizzy |
+| 🦊 Fox | 👃 Sniffs around | ❄️ Pounces into the snow | 🍂 Chases a falling leaf |
+| 🐰 Rabbit | 🥕 Nibbles a carrot | 🐇 Hops around | ✨ Happy binkies with a mid-air twist |
+| 🐹 Hamster | 🌻 Stuffs its cheeks with seeds | 🔵 Rolls in a hamster ball | 🎡 Runs in the wheel |
+| 🐦 Bird | 🌾 Pecks at grain | 🪶 Flutters about | 🕊 Flies back and forth |
+| 🐟 Fish | 🫧 Blows bubbles | 🍤 Catches sinking food flakes | 💨 Darts around |
+| 🐢 Turtle | 🥬 Munches lettuce | 🐢 Takes a slow stroll | 🍓 Races to a strawberry |
+
+You can also pick a toy manually from the menu: it lists the toys of your animal. If you switch animals, the toy for the same load level is picked for you.
 
 ### 🚨 Smart indicators
 
@@ -63,7 +69,7 @@ Turn on **Play on screen when I'm away** (after 1, 3, 5 or 10 minutes), or try *
 - 🧗 **Window climbing**: climbs up the side of a window, crosses its top and slides down the other side.
 - 🪟 **Ledge sitting**: sits on the edge of a window with its legs dangling.
 - 🪴 **Mischief**: pushes a flower pot off a window and watches it fall.
-- 💨 **Zoomies**, 🦋 **butterfly chasing**, plus yarn, mouse and laser. Toys live on the window your pet stands on: the yarn ball rolls off the edge and your pet jumps down after it.
+- 💨 **Zoomies**, 🦋 **butterfly chasing**, plus your animal's own toys. Toys live on the window your pet stands on: the yarn ball rolls off the edge and your pet jumps down after it.
 - 😴 **Window nap**: after 15 minutes it climbs onto your highest window and falls asleep.
 
 Move the mouse or press any key and it's instantly back in the menu bar. It never starts while a video, call or presentation is keeping your display awake, and clicks always pass straight through it.
@@ -183,6 +189,7 @@ Sources/
 │   ├── Behaviors.swift  One strategy per activity: yarn, mouse, laser, zoomies, butterfly, alerts…
 │   ├── WorldBehaviors   Navigator plus explore, hide-and-seek, cursor hunt and window nap
 │   ├── WindowGames      Window climbing, ledge sitting and knocking a flower pot off
+│   ├── SpeciesBehaviors Snacks, wandering, hops, fetch, tail chase, flying, hamster ball and wheel
 │   ├── World.swift      Window tops as platforms, ledges, climbable walls, hiding spots
 │   ├── ActivityPolicy   What to play given CPU, thermal state, memory and battery
 │   ├── Roam.swift       When to leave the menu bar, when to come back, which game is next
@@ -201,7 +208,7 @@ Every animal is just a set of 16×12 ASCII rows such as `"..KOK.....KOK..."`. Le
 
 ### Contributing
 
-- **Add an animal**: add its art to `SpeciesArt.swift`, its palettes and pace to `Species.swift`, and a name in `L10n.swift` plus `uk.lproj`. The tests check frame sizes, palette letters, room for effects and staying on screen.
+- **Add an animal**: add its art to `SpeciesArt.swift`, its palettes, pace, home and three toys to `Species.swift`, and a name in `L10n.swift` plus `uk.lproj`. The tests check frame sizes, palette letters, room for effects and staying on screen.
 - **Add a language**: create `Resources/<code>.lproj/Localizable.strings`, add the code to `AppLanguage` and `CFBundleLocalizations`, and include it in `LocalizationTests`. The tests fail if any key or placeholder is missing.
 - Code style: no comments, small focused types, logic in `AmazingPetCore` with tests. See [`CLAUDE.md`](CLAUDE.md), the same rules the AI followed.
 

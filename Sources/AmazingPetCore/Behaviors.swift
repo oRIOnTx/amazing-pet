@@ -208,29 +208,33 @@ struct LaserBehavior: Behavior {
 struct ZoomiesBehavior: Behavior {
     static let patience = 6.0
     private let dice: Dice
+    private let leaps: Bool
+    private let pace: Double
     private(set) var target: Goal
     private var patienceLeft = Self.patience
 
-    init(pet: Pet, dice: Dice) {
+    init(pet: Pet, dice: Dice, leaps: Bool = true, pace: Double = 45) {
         self.dice = dice
+        self.leaps = leaps
+        self.pace = pace
         target = Goal(surface: pet.lane.y, x: pet.center)
     }
 
     mutating func step(_ pet: inout Pet, dt: Double, speed: Double) {
         guard !pet.isPaused else { return }
         patienceLeft -= dt
-        let arrived = Navigator.step(&pet, to: target, speed: 45 * speed, dt: dt)
+        let arrived = Navigator.step(&pet, to: target, speed: pace * speed, dt: dt)
         if arrived || patienceLeft <= 0 {
             pet.pause = dice(0.2...1.0)
             target = nextTarget(pet)
             patienceLeft = Self.patience
             return
         }
-        if abs(pet.feet - target.surface) < 0.01, dice(0...1) < dt * 0.5 { pet.jump() }
+        if leaps, abs(pet.feet - target.surface) < 0.01, dice(0...1) < dt * 0.5 { pet.jump() }
     }
 
     private func nextTarget(_ pet: Pet) -> Goal {
-        if dice(0...1) < 0.3 { return Navigator.randomGoal(for: pet, dice: dice) }
+        if leaps, dice(0...1) < 0.3 { return Navigator.randomGoal(for: pet, dice: dice) }
         let lane = pet.lane
         let half = Pet.width / 2
         guard lane.width > Pet.width else { return Goal(surface: lane.y, x: pet.center) }
@@ -245,13 +249,15 @@ struct ZoomiesBehavior: Behavior {
 struct ButterflyBehavior: Behavior {
     static let size = 5.0
     private let dice: Dice
+    private let frames: [Sprite]
     private(set) var position: (x: Double, y: Double)
     private var target: (x: Double, y: Double)
     private var flutter = 0.0
     private(set) var jumps = 0
 
-    init(pet: Pet, dice: Dice) {
+    init(pet: Pet, dice: Dice, frames: [Sprite] = Sprites.butterfly) {
         self.dice = dice
+        self.frames = frames
         let x = pet.facingRight ? min(pet.x + 24, pet.stage.width - Self.size) : max(pet.x - 12, 0)
         position = (x, max(0, pet.feet - 18))
         target = position
@@ -297,7 +303,7 @@ struct ButterflyBehavior: Behavior {
         let y = (position.y + wobble).clamped(to: 0...(pet.stage.height - 4))
         return SceneSnapshot(
             pet: pet.item(pet.walkingSprite),
-            prop: .init(sprite: Sprites.butterfly[Int(flutter * 8) % 2], x: position.x.rounded(), y: y.rounded())
+            prop: .init(sprite: frames[Int(flutter * 8) % frames.count], x: position.x.rounded(), y: y.rounded())
         )
     }
 }

@@ -14,6 +14,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     private var modeItems: [(item: NSMenuItem, mode: Mode)] = []
     private var languageItems: [(item: NSMenuItem, language: AppLanguage)] = []
     private var roamItems: [(item: NSMenuItem, minutes: Int)] = []
+    private var builtSpecies: Species?
     private let onCustomize: () -> Void
     private let onLanguageChange: () -> Void
 
@@ -35,6 +36,8 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         modeItems = []
         languageItems = []
         roamItems = []
+        let species = settings.profile.look.species
+        builtSpecies = species
 
         statusItem.isEnabled = false
         metricsItem.isEnabled = false
@@ -49,7 +52,7 @@ final class StatusMenu: NSObject, NSMenuDelegate {
         let header = NSMenuItem(title: L10n.toyHeader, action: nil, keyEquivalent: "")
         header.isEnabled = false
         menu.addItem(header)
-        let modes = [Mode.auto] + Activity.toys.map(Mode.fixed)
+        let modes = [Mode.auto] + species.menuToys.map(Mode.fixed)
         for mode in modes {
             let item = action(title(for: mode), #selector(selectMode(_:)))
             item.indentationLevel = 1
@@ -113,11 +116,14 @@ final class StatusMenu: NSObject, NSMenuDelegate {
     }
 
     func menuWillOpen(_ menu: NSMenu) {
+        let species = settings.profile.look.species
+        if species != builtSpecies { build() }
         let name = settings.profile.name
         statusItem.title = L10n.status(controller.activity, name: name)
         strokeItem.title = L10n.stroke(name)
         metricsItem.title = L10n.metrics(controller.status)
-        for (item, mode) in modeItems { item.state = mode == settings.mode ? .on : .off }
+        let mode = settings.mode.resolved(for: species)
+        for (item, itemMode) in modeItems { item.state = itemMode == mode ? .on : .off }
         for (item, language) in languageItems { item.state = language == settings.language ? .on : .off }
         for (item, minutes) in roamItems { item.state = minutes == settings.roamDelayMinutes ? .on : .off }
         indicatorsItem.state = settings.indicatorsEnabled ? .on : .off

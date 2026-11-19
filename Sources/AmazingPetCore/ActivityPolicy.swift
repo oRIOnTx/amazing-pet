@@ -5,11 +5,16 @@ public enum Mode: Equatable {
     case fixed(Activity)
 
     public init(rawValue: String?) {
-        if let raw = rawValue, let activity = Activity(rawValue: raw), Activity.toys.contains(activity) {
+        if let raw = rawValue, let activity = Activity(rawValue: raw), activity == .sleep || Activity.allToys.contains(activity) {
             self = .fixed(activity)
         } else {
             self = .auto
         }
+    }
+
+    public func resolved(for species: Species) -> Mode {
+        guard case .fixed(let activity) = self else { return self }
+        return .fixed(species.toy(matching: activity))
     }
 
     public var rawValue: String {
@@ -23,10 +28,10 @@ public enum Mode: Equatable {
 public enum ActivityPolicy {
     public static let idleSleepSeconds = 180.0
 
-    public static func activity(for status: SystemStatus, mode: Mode, indicators: Bool) -> Activity {
+    public static func activity(for status: SystemStatus, mode: Mode, indicators: Bool, species: Species = .cat) -> Activity {
         if indicators, let alert = alert(for: status) { return alert }
-        if case .fixed(let activity) = mode { return activity }
-        return toy(for: status)
+        if case .fixed(let activity) = mode.resolved(for: species) { return activity }
+        return toy(for: status, species: species)
     }
 
     public static func alert(for status: SystemStatus) -> Activity? {
@@ -37,11 +42,11 @@ public enum ActivityPolicy {
         return nil
     }
 
-    public static func toy(for status: SystemStatus) -> Activity {
+    public static func toy(for status: SystemStatus, species: Species = .cat) -> Activity {
         if status.idleSeconds > idleSleepSeconds || status.cpu < 0.04 { return .sleep }
-        if status.cpu < 0.20 { return .yarn }
-        if status.cpu < 0.50 { return .mouse }
-        return .laser
+        if status.cpu < 0.20 { return species.toys[0] }
+        if status.cpu < 0.50 { return species.toys[1] }
+        return species.toys[2]
     }
 
     public static func speed(for status: SystemStatus, mode: Mode) -> Double {

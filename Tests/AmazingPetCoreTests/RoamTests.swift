@@ -42,7 +42,7 @@ struct RoamDirectorTests {
         let next = director.update(now: RoamDirector.gameLength.upperBound, idleSeconds: 60)
         #expect(next != nil)
         #expect(next != first)
-        #expect(Activity.roamGames.contains(director.current))
+        #expect(Activity.roamGames(for: .cat).contains(director.current))
     }
 
     @Test func napsAfterLongAbsenceOnce() {
@@ -52,7 +52,7 @@ struct RoamDirectorTests {
     }
 
     @Test func roamGamesAreNotMenuToysOrAlerts() {
-        #expect(!Activity.roamGames.contains { $0.isAlert })
+        #expect(!Activity.worldGames.contains { $0.isAlert })
         #expect(Mode(rawValue: Activity.zoomies.rawValue) == .auto)
         #expect(Mode(rawValue: Activity.butterfly.rawValue) == .auto)
     }
@@ -66,7 +66,7 @@ struct RoamSimulationTests {
             && item.y >= 0 && item.y + Double(item.sprite.height) <= stage.height
     }
 
-    @Test(arguments: Activity.roamGames + [.sleep], Species.allCases)
+    @Test(arguments: Activity.worldGames + Activity.allToys + [.sleep], Species.allCases)
     func everythingStaysInsideRoamStage(activity: Activity, species: Species) {
         let simulation = PetSimulation(stage: stage, activity: activity, look: PetLook(species: species), dice: Dice(seed: 8))
         for _ in 0..<1200 {

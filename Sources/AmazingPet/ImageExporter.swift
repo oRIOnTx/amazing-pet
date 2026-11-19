@@ -72,7 +72,8 @@ enum ImageExporter {
     }
 
     private static func previewScene(_ activity: Activity?, at time: Double) -> SceneSnapshot {
-        let simulation = PetSimulation(activity: activity ?? .yarn, dice: Dice(seed: 7))
+        let species = activity.flatMap(Species.owner(of:)) ?? .cat
+        let simulation = PetSimulation(activity: activity ?? .yarn, look: PetLook(species: species), dice: Dice(seed: 7))
         if activity == nil { simulation.stroke() }
         for _ in 0..<Int(time * 20) { simulation.step(0.05) }
         return simulation.snapshot()
@@ -104,7 +105,7 @@ enum ImageExporter {
     static func exportRoam(to file: URL) throws {
         let stage = Stage(width: 110, height: 40)
         let scale = 4.0
-        let games = Activity.roamGames + [.sleep]
+        let games = Activity.roamGames(for: .dog) + [.sleep]
         let rowHeight = Int(stage.height * scale)
         let ctx = makeContext(width: Int(stage.width * scale), height: rowHeight * games.count)
         for (row, game) in games.enumerated() {

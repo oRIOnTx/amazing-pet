@@ -235,9 +235,60 @@ public enum Sprites {
     public static let shards = Sprite(["..v.v..", "cK.vKCc"])
     public static let bubble = Sprite([".S.", "S.S", ".S."])
 
+    public static let bone = [
+        Sprite([".K....K.", "KWKKKKWK", "KWWWWWWK", "KWKKKKWK", ".K....K."]),
+        Sprite([".K......", "KWKKK...", "KWWWWK..", "KWKKK...", ".K......"]),
+        Sprite(["........", "........", "........", "..W..W..", ".W..W..."]),
+    ]
+    public static let carrot = [
+        Sprite([".....v.v", ".AAAAAv.", "AAAAAAA.", ".AAAA..."]),
+        Sprite([".....v.v", "...AAAv.", "..AAAAA.", "...AA..."]),
+        Sprite([".....v.v", "......v.", "........", "........"]),
+    ]
+    public static let seeds = [
+        Sprite(["..K.K..", ".KgKgK.", "KgKKKgK"]),
+        Sprite([".......", "..K.K..", ".KgKgK."]),
+        Sprite([".......", ".......", "..K...."]),
+    ]
+    public static let grain = [
+        Sprite(["..A.A..", ".AAAAA.", "AAAAAAA"]),
+        Sprite([".......", "...A...", ".AA.AA."]),
+        Sprite([".......", ".......", "..A...."]),
+    ]
+    public static let lettuce = [
+        Sprite([".vvvv..", "vvWvvv.", "vvvvWvv", ".vvvvv."]),
+        Sprite([".......", "..vvv..", ".vvWvv.", "..vvvv."]),
+        Sprite([".......", ".......", "...v...", "..vv..."]),
+    ]
+    public static let strawberry = [
+        Sprite(["v.v.v", ".vvv.", "RRTRR", "RRRTR", ".RRR."]),
+        Sprite([".....", ".vvv.", "RRTR.", "RRR..", ".R..."]),
+        Sprite([".....", ".....", ".....", ".v.v.", "....."]),
+    ]
+    public static let flakes = [
+        Sprite(["AA.", ".AA"]),
+        Sprite([".A.", "A.."]),
+        Sprite(["...", ".A."]),
+    ]
+    public static let ball = Sprite([".RR.", "RRWR", "RRRR", ".RR."])
+    public static let leaf = [
+        Sprite(["...AA", ".AAAA", "AAAA.", "K...."]),
+        Sprite(["AA...", "AAAA.", ".AAAA", "....K"]),
+    ]
+    public static let sniff = Sprite(["g.g", ".g."])
+    public static let dust = Sprite(["g......g", ".g....g."])
+    public static let star = Sprite([".A.", "AAA", ".A."])
+    public static let hamsterBall = Sprite([".....SSSSSSSS.....", "...SSS......SSS...", "..SSWW........SS..", ".S.W............S.", "SS..............SS", "S................S", "S................S", "SS..............SS", ".S..............S.", "..SS..........SS..", "...SSS......SSS...", ".....SSSSSSSS....."])
+    public static let wheel = [
+        Sprite([".....KGGKKGGK.....", "...GGK......KGG...", "..KK..........KK..", ".G..............G.", "KG..............GK", "K................K", "G................G", "GK..............KG", ".K..............K.", "..GG..........GG..", "...KKG......GKK...", ".....GKKGGKKG....."]),
+        Sprite([".....GKKGGKKG.....", "...KKG......GKK...", "..GG..........GG..", ".K..............K.", "GK..............KG", "G................G", "K................K", "KG..............GK", ".G..............G.", "..KK..........KK..", "...GGK......KGG...", ".....KGGKKGGK....."]),
+    ]
+
     public static let homes = [basket, kennel, den, burrow, cage, birdhouse, aquarium, rocks]
 
     public static let all: [Sprite] =
         defaultPet.all + yarn + toyMouse + laser + thermometer
         + butterfly + homes + [bowl, zzz, heart, sweat, exclamation, fish, bubble, pot, shards]
+        + bone + carrot + seeds + grain + lettuce + strawberry + flakes + leaf + wheel
+        + [ball, sniff, dust, star, hamsterBall]
 }

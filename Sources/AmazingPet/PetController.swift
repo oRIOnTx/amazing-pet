@@ -25,6 +25,7 @@ final class PetController {
 
     func setLook(_ look: PetLook) {
         simulation.look = look
+        applySettings()
     }
 
     func start() {
@@ -75,7 +76,9 @@ final class PetController {
     }
 
     private func wantedActivity() -> Activity {
-        ActivityPolicy.activity(for: status, mode: settings.mode, indicators: settings.indicatorsEnabled)
+        ActivityPolicy.activity(
+            for: status, mode: settings.mode, indicators: settings.indicatorsEnabled, species: simulation.look.species
+        )
     }
 
     private func sample() {

@@ -15,6 +15,7 @@ enum DocsExporter {
         try ImageExporter.writePNG(banner(), to: directory.appendingPathComponent("banner.png"))
         try writeGIF(menuBarDemo(), to: directory.appendingPathComponent("menubar.gif"))
         try writeGIF(roamDemo(), to: directory.appendingPathComponent("roam.gif"))
+        try writeGIF(toysDemo(), to: directory.appendingPathComponent("toys.gif"))
         try ImageExporter.exportSpecies(to: directory.appendingPathComponent("species.png"))
         try ImageExporter.exportPreview(to: directory.appendingPathComponent("scenes.png"))
         try ImageExporter.exportBuilder(to: directory.appendingPathComponent("builder.png"))
@@ -71,6 +72,39 @@ enum DocsExporter {
                 let origin = CGPoint(x: bar.midX - Stage.menuBar.width * scale / 2, y: bar.midY - Stage.menuBar.height * scale / 2)
                 ImageExporter.draw(simulation.snapshot(), in: ctx, origin: origin, scale: scale)
                 drawText(part.text, size: 11, scale: 2, color: caption, centerX: Double(size.width) / 2, top: 100, in: ctx)
+                return ctx.makeImage()!
+            }
+        }
+    }
+
+    private static func toysDemo() -> [CGImage] {
+        let scale = 5.0
+        let columns = 2
+        let cell = (width: 260.0, height: 76.0)
+        let header = 44.0
+        let rows = (Species.allCases.count + columns - 1) / columns
+        let size = (width: Int(cell.width) * columns, height: Int(header + cell.height * Double(rows)))
+        let tiers = ["Low load", "Medium load", "High load"]
+        return tiers.indices.flatMap { tier -> [CGImage] in
+            let simulations = Species.allCases.map { species in
+                PetSimulation(activity: species.toys[tier], look: PetLook(species: species), dice: Dice(seed: 5))
+            }
+            return (0..<Int(3.5 * gifFPS)).map { _ in
+                let ctx = ImageExporter.makeContext(width: size.width, height: size.height)
+                paintBackground(ctx)
+                drawText(tiers[tier], size: 11, scale: 2, color: caption, centerX: Double(size.width) / 2, top: 10, in: ctx)
+                for (index, simulation) in simulations.enumerated() {
+                    simulation.step(1 / gifFPS)
+                    let column = Double(index % columns), row = Double(index / columns)
+                    let bar = CGRect(
+                        x: column * cell.width + 10, y: Double(size.height) - header - (row + 1) * cell.height + 8,
+                        width: cell.width - 20, height: cell.height - 16
+                    )
+                    ctx.setFillColor(Palette.color(0x2B2A33))
+                    ctx.fill(bar)
+                    let origin = CGPoint(x: bar.midX - Stage.menuBar.width * scale / 2, y: bar.midY - Stage.menuBar.height * scale / 2)
+                    ImageExporter.draw(simulation.snapshot(), in: ctx, origin: origin, scale: scale)
+                }
                 return ctx.makeImage()!
             }
         }
