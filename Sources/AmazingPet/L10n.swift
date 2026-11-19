@@ -61,6 +61,7 @@ enum L10n {
         case .cursor: tr("toy.cursor", "Cursor hunt")
         case .perch: tr("toy.perch", "Window nap")
         case .overheated: tr("alert.overheated.title", "Overheating")
+        case .memoryTight: tr("alert.memoryTight.title", "Memory is tight")
         case .memoryFull: tr("alert.memoryFull.title", "Memory full")
         case .hungry: tr("alert.hungry.title", "Low battery")
         }
@@ -79,7 +80,8 @@ enum L10n {
         case .cursor: tr("status.cursor", "%@ is hunting your cursor 🖱")
         case .perch: tr("status.perch", "%@ is napping on a window 😴")
         case .overheated: tr("status.overheated", "%@ is too hot! Your Mac is overheating 🌡")
-        case .memoryFull: tr("status.memoryFull", "%@ is stuck in a tiny box: memory is full 📦")
+        case .memoryTight: tr("status.memoryTight", "%@ is hiding at home: memory is getting tight 🏠")
+        case .memoryFull: tr("status.memoryFull", "%@ barely fits at home: memory is full 🏠")
         case .hungry: tr("status.hungry", "%@ is hungry: battery is low 🐟")
         }
         return String(format: format, name)

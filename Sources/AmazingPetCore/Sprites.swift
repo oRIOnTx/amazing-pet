@@ -72,6 +72,8 @@ public enum Palette {
         "A": color(0xF6A623),
         "U": color(0x7FD6FF),
         "u": color(0xFFB3E6),
+        "a": color(0x6FB8FF, 0.3),
+        "v": color(0x5DBB63),
     ]
 }
 
@@ -98,13 +100,34 @@ public enum Sprites {
         Sprite([".KK.", "KWWK", "KRWK", "KRWK", "KRWK", "KRRK", "KRRK", "KRRK", "KRRK", ".KK."]),
     ]
 
-    public static let box = Sprite([
-        "K................K",
-        "CK..............KC",
-        "KKKKKKKKKKKKKKKKKK",
-        "KCCCCCCCTTCCCCCCCK",
-        "KcCCCCCCTTCCCCCCcK",
-        "KKKKKKKKKKKKKKKKKK",
+    public static let house = Sprite([
+        "......KKKKKKKK......",
+        "...KKKccccccccKKK...",
+        "KKKccccccccccccccKKK",
+        "KKKKKKKKKKKKKKKKKKKK",
+        ".KCCCCCCK........KCK",
+        ".KCCCCCCK........KCK",
+        ".KccccccK........KcK",
+        ".KCCCCCCK........KCK",
+        ".KCCCCCCK........KCK",
+        ".KccccccK........KcK",
+        ".KCCCCCCK........KCK",
+        ".KKKKKKKK........KKK",
+    ])
+
+    public static let aquarium = Sprite([
+        "g..................g",
+        "g..................g",
+        "gSSSSSSSSSSSSSSSSSSg",
+        "gaaaaaaaaaaaaaaaaaag",
+        "gaaaaaaaaaaaaaaaaaag",
+        "gaaaaaaaaaaaaaaaaaag",
+        "gaavaaaaaaaaaaaaaaag",
+        "gavaaaaaaaaaaaaaaaag",
+        "gaavaaaaaaaaaaaavaag",
+        "gavaaaaaaaaaaaaavaag",
+        "gaavaaaaaaaaaaaaavag",
+        "KKKKKKKKKKKKKKKKKKKK",
     ])
 
     public static let bowl = Sprite(["KKKKKKKK", "KbbbbbbK", ".KKKKKK."])
@@ -118,8 +141,9 @@ public enum Sprites {
         Sprite([".U.u.", ".UKu.", "..K..", "..K.."]),
     ]
     public static let fish = Sprite([".FFF.F", "FEFFFF", ".FFF.F"])
+    public static let bubble = Sprite([".S.", "S.S", ".S."])
 
     public static let all: [Sprite] =
         defaultPet.all + yarn + toyMouse + laser + thermometer
-        + butterfly + [box, bowl, zzz, heart, sweat, exclamation, fish]
+        + butterfly + [house, aquarium, bowl, zzz, heart, sweat, exclamation, fish, bubble]
 }

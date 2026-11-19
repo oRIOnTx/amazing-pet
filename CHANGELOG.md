@@ -8,6 +8,12 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 
 ## [Unreleased]
 
+### Added
+- Every pet now has a home: a little house, or an aquarium for the fish.
+
+### Changed
+- The memory indicator follows the macOS memory pressure level: at the warning level the pet calmly hides at home, and only at the critical level does the home shake with a blinking `!`. It no longer uses a box, and the fish stays in water.
+
 ## [1.0.0] - 2026-11-18
 
 The first public release.

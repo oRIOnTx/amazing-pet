@@ -42,12 +42,47 @@ struct SimulationTests {
         #expect(scene.effects.count == 2)
     }
 
-    @Test(arguments: [(Activity.overheated, Sprites.thermometer[0]), (.memoryFull, Sprites.box), (.hungry, Sprites.bowl)])
+    @Test(arguments: [
+        (Activity.overheated, Sprites.thermometer[0]), (.memoryTight, Sprites.house), (.memoryFull, Sprites.house),
+        (.hungry, Sprites.bowl),
+    ])
     func alertsShowTheirProp(activity: Activity, prop: Sprite) {
         let simulation = PetSimulation(activity: activity, dice: Dice(seed: 1))
         let scene = simulation.snapshot()
         #expect(scene.pet.sprite.rows == Species.cat.art.rest)
         #expect(scene.prop?.sprite === prop)
+    }
+
+    @Test(arguments: [Activity.memoryTight, .memoryFull])
+    func fishHidesInAquarium(activity: Activity) {
+        let simulation = PetSimulation(activity: activity, look: PetLook(species: .fish), dice: Dice(seed: 1))
+        #expect(simulation.snapshot().prop?.sprite === Sprites.aquarium)
+    }
+
+    @Test func changingSpeciesMovesPetToItsHome() {
+        let simulation = PetSimulation(activity: .memoryTight, dice: Dice(seed: 1))
+        simulation.look = PetLook(species: .fish)
+        #expect(simulation.snapshot().prop?.sprite === Sprites.aquarium)
+    }
+
+    @Test func homeSurroundsPetEvenAtStageEdge() {
+        var pet = Pet()
+        pet.x = pet.maxX
+        let behavior = Activity.memoryTight.makeBehavior(for: &pet, dice: Dice(seed: 1))
+        let scene = behavior.scene(pet, clock: 0)
+        let prop = scene.prop!
+        #expect(prop.x + (Double(prop.sprite.width) - Pet.width) / 2 == scene.pet.x)
+    }
+
+    @Test func onlyFullMemoryShakesTheHome() {
+        var pet = Pet()
+        let tight = Activity.memoryTight.makeBehavior(for: &pet, dice: Dice(seed: 1))
+        let full = Activity.memoryFull.makeBehavior(for: &pet, dice: Dice(seed: 1))
+        let positions = { (behavior: any Behavior) in Set([0, 0.25, 0.5, 0.75].map { behavior.scene(pet, clock: $0).prop!.x }) }
+        #expect(positions(tight).count == 1)
+        #expect(positions(full).count == 2)
+        #expect(full.scene(pet, clock: 0).effects.allSatisfy { $0.sprite === Sprites.exclamation })
+        #expect(tight.scene(pet, clock: 0).effects.allSatisfy { $0.sprite === Sprites.sweat })
     }
 
     @Test func alertPropDoesNotOverlapCatAtStageEdge() {

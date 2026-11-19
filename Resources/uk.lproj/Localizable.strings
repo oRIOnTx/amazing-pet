@@ -34,6 +34,7 @@
 "toy.cursor" = "Полювання на курсор";
 "toy.perch" = "Дрімота на вікні";
 "alert.overheated.title" = "Перегрів";
+"alert.memoryTight.title" = "Памʼяті обмаль";
 "alert.memoryFull.title" = "Памʼять заповнена";
 "alert.hungry.title" = "Низький заряд";
 
@@ -48,7 +49,8 @@
 "status.cursor" = "%@ полює на курсор 🖱";
 "status.perch" = "%@ дрімає на вікні 😴";
 "status.overheated" = "%@: спекотно! Mac перегрівся 🌡";
-"status.memoryFull" = "%@ застряг у коробці: памʼять заповнена 📦";
+"status.memoryTight" = "%@ ховається вдома: памʼяті стає мало 🏠";
+"status.memoryFull" = "%@ ледве вміщається вдома: памʼять заповнена 🏠";
 "status.hungry" = "%@ голодний: батарея сідає 🐟";
 
 "coat.ginger" = "Рудий";

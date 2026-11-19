@@ -261,22 +261,36 @@ struct AlertBehavior: Behavior {
     let placement: Placement
     let effect: Sprite
     let effectStyle: EffectStyle
+    var shaking = false
 
     static let overheated = AlertBehavior(
         frames: Sprites.thermometer, placement: .inFront(y: 2), effect: Sprites.sweat, effectStyle: .floating(rate: 0.8)
-    )
-    static let memoryFull = AlertBehavior(
-        frames: [Sprites.box], placement: .around(y: 6), effect: Sprites.exclamation, effectStyle: .blinking
     )
     static let hungry = AlertBehavior(
         frames: [Sprites.bowl], placement: .inFront(y: 9), effect: Sprites.fish, effectStyle: .floating(rate: 0.4)
     )
 
+    static func memoryTight(_ home: Home) -> AlertBehavior {
+        AlertBehavior(frames: [home.sprite], placement: .around(y: 0), effect: home.unease, effectStyle: .floating(rate: 0.3))
+    }
+
+    static func memoryFull(_ home: Home) -> AlertBehavior {
+        AlertBehavior(
+            frames: [home.sprite], placement: .around(y: 0), effect: Sprites.exclamation, effectStyle: .blinking, shaking: true
+        )
+    }
+
     func prepare(_ pet: inout Pet) {
-        guard case .inFront = placement else { return }
-        let room = Double(frames[0].width) + 1
-        if pet.facingRight && pet.x + Pet.width + room > pet.stage.width { pet.facingRight = false }
-        if !pet.facingRight && pet.x - room < 0 { pet.facingRight = true }
+        let width = Double(frames[0].width)
+        switch placement {
+        case .inFront:
+            let room = width + 1
+            if pet.facingRight && pet.x + Pet.width + room > pet.stage.width { pet.facingRight = false }
+            if !pet.facingRight && pet.x - room < 0 { pet.facingRight = true }
+        case .around:
+            let margin = (width - Pet.width) / 2 + 1
+            pet.x = pet.x.clamped(to: margin...(pet.stage.width - Pet.width - margin))
+        }
     }
 
     mutating func step(_ pet: inout Pet, dt: Double, speed: Double) {}
@@ -287,7 +301,16 @@ struct AlertBehavior: Behavior {
         case .floating(let rate): Effects.floating(effect, from: pet, clock: clock, rate: rate)
         case .blinking: Effects.blinking(effect, over: pet, clock: clock)
         }
-        return SceneSnapshot(pet: pet.item(pet.sprites.rest), prop: propItem(sprite, pet: pet), effects: effects)
+        var petItem = pet.item(pet.sprites.rest)
+        var prop = propItem(sprite, pet: pet)
+        let jolt = shake(at: clock)
+        petItem.x += jolt
+        prop.x += jolt
+        return SceneSnapshot(pet: petItem, prop: prop, effects: effects)
+    }
+
+    func shake(at clock: Double) -> Double {
+        shaking && Int(clock * 4) % 2 == 1 ? 1 : 0
     }
 
     private func propItem(_ sprite: Sprite, pet: Pet) -> SceneSnapshot.Item {
@@ -299,7 +322,9 @@ struct AlertBehavior: Behavior {
             return .init(sprite: sprite, x: x.clamped(to: 0...maxX).rounded(), y: pet.ground + y)
         case .around(let y):
             let x = pet.x - (width - Pet.width) / 2
-            return .init(sprite: sprite, x: x.clamped(to: 0...maxX).rounded(), y: pet.ground + y)
+            return .init(
+                sprite: sprite, facingRight: pet.facingRight, x: x.clamped(to: 0...maxX).rounded(), y: pet.ground + y
+            )
         }
     }
 }

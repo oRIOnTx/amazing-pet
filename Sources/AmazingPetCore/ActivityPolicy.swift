@@ -31,7 +31,8 @@ public enum ActivityPolicy {
 
     public static func alert(for status: SystemStatus) -> Activity? {
         if status.thermal >= .serious { return .overheated }
-        if status.memory != .normal { return .memoryFull }
+        if status.memory == .critical { return .memoryFull }
+        if status.memory == .warning { return .memoryTight }
         if status.battery?.isLow == true { return .hungry }
         return nil
     }

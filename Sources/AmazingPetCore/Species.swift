@@ -26,6 +26,8 @@ public enum Species: String, CaseIterable {
 
     var headOffset: Double { 12 }
 
+    var home: Home { self == .fish ? .aquarium : .house }
+
     public var coats: [Coat] { palettes.map(\.coat) }
 
     func palette(_ coat: Coat) -> [Character: UInt32] {
@@ -97,6 +99,7 @@ public final class PetSprites {
     public let run: [Sprite]
     public let rest: Sprite
     public let pace: Double
+    public let home: Home
     let headOffset: Double
 
     public init(look: PetLook = PetLook()) {
@@ -106,6 +109,7 @@ public final class PetSprites {
         run = art.run.map { Sprite($0, colors: colors) }
         rest = Sprite(art.rest, colors: colors)
         pace = look.species.pace
+        home = look.species.home
         headOffset = look.species.headOffset
     }
 

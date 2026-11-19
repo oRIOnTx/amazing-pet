@@ -8,7 +8,7 @@ public final class PetSimulation {
         set { pet.world = newValue }
     }
     public var look: PetLook {
-        didSet { if look != oldValue { pet.sprites = PetSprites(look: look) } }
+        didSet { if look != oldValue { dress(in: look) } }
     }
 
     private let dice: Dice
@@ -34,6 +34,11 @@ public final class PetSimulation {
         activity = new
         pet.pause = 0
         behavior = new.makeBehavior(for: &pet, dice: dice)
+    }
+
+    private func dress(in look: PetLook) {
+        pet.sprites = PetSprites(look: look)
+        if activity.isAlert { behavior = activity.makeBehavior(for: &pet, dice: dice) }
     }
 
     public func stroke() { purrTime = Self.purrDuration }

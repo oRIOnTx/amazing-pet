@@ -56,6 +56,7 @@ enum DocsExporter {
             (3, "Hunts a toy mouse when the CPU is busy", { $0.setActivity(.mouse) }),
             (3, "Chases a laser under heavy load", { $0.setActivity(.laser) }),
             (2.5, "Your Mac is overheating!", { $0.setActivity(.overheated) }),
+            (2.5, "Hides at home when memory gets tight", { $0.setActivity(.memoryTight) }),
             (2.5, "Memory is full", { $0.setActivity(.memoryFull) }),
             (2.5, "Purrs when you pet it", { $0.setActivity(.sleep); $0.stroke() }),
         ]

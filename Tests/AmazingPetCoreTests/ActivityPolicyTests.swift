@@ -15,7 +15,8 @@ struct ActivityPolicyTests {
     @Test func alertsHavePriorityOrder() {
         let all = SystemStatus(thermal: .critical, memory: .critical, battery: Battery(level: 0.05, charging: false))
         #expect(ActivityPolicy.alert(for: all) == .overheated)
-        #expect(ActivityPolicy.alert(for: SystemStatus(memory: .warning, battery: all.battery)) == .memoryFull)
+        #expect(ActivityPolicy.alert(for: SystemStatus(memory: .critical, battery: all.battery)) == .memoryFull)
+        #expect(ActivityPolicy.alert(for: SystemStatus(memory: .warning, battery: all.battery)) == .memoryTight)
         #expect(ActivityPolicy.alert(for: SystemStatus(battery: all.battery)) == .hungry)
         #expect(ActivityPolicy.alert(for: SystemStatus(thermal: .fair)) == nil)
     }
