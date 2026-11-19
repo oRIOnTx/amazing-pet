@@ -55,7 +55,10 @@ struct ExploreBehavior: Behavior {
     static let patience = 14.0
     private let dice: Dice
     private(set) var goal: Goal
+    private(set) var reaction: WindowKind?
     private var patienceLeft = Self.patience
+    private var reactionTime = 0.0
+    private var beat = 0.0
 
     init(pet: Pet, dice: Dice) {
         self.dice = dice
@@ -63,17 +66,50 @@ struct ExploreBehavior: Behavior {
     }
 
     mutating func step(_ pet: inout Pet, dt: Double, speed: Double) {
+        if reaction != nil {
+            react(&pet, dt: dt)
+            return
+        }
         guard !pet.isPaused else { return }
         patienceLeft -= dt
         let arrived = Navigator.step(&pet, to: goal, speed: 16 * speed, dt: dt)
         guard arrived || patienceLeft <= 0 else { return }
-        pet.pause = dice(0.8...3)
         goal = Navigator.randomGoal(for: pet, dice: dice)
         patienceLeft = Self.patience
+        if arrived, let kind = pet.footing.window?.kind, kind != .other {
+            reaction = kind
+            reactionTime = dice(3...5)
+            beat = 0
+        } else {
+            pet.pause = dice(0.8...3)
+        }
+    }
+
+    private mutating func react(_ pet: inout Pet, dt: Double) {
+        reactionTime -= dt
+        beat += dt
+        if reaction == .music, beat >= 0.5 {
+            beat = 0
+            pet.facingRight.toggle()
+            pet.jump(speed: 30)
+        }
+        if reactionTime <= 0 { reaction = nil }
     }
 
     func scene(_ pet: Pet, clock: Double) -> SceneSnapshot {
-        SceneSnapshot(pet: pet.item(pet.walkingSprite))
+        switch reaction {
+        case .code:
+            return SceneSnapshot(
+                pet: pet.item(pet.sprites.walk[Int(clock * 6) % 2]),
+                effects: Effects.floating(Sprites.bits, from: pet, clock: clock, rate: 0.8)
+            )
+        case .music:
+            return SceneSnapshot(pet: pet.item(pet.walkingSprite), effects: Effects.floating(Sprites.note, from: pet, clock: clock, rate: 0.6))
+        case .chat:
+            return SceneSnapshot(pet: pet.item(pet.sprites.walk[0]), effects: Effects.blinking(Sprites.speech, over: pet, clock: clock))
+        case .other, nil:
+            return SceneSnapshot(pet: pet.item(pet.walkingSprite))
+        }
     }
 }
 

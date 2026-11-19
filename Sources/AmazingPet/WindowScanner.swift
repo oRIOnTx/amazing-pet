@@ -23,13 +23,18 @@ enum WindowScanner {
             let box = Box(
                 x: rect.minX / pixel, y: (frame.height - rect.maxY) / pixel,
                 width: rect.width / pixel, height: rect.height / pixel,
-                id: info[kCGWindowNumber as String] as? Int ?? 0
+                id: info[kCGWindowNumber as String] as? Int ?? 0,
+                kind: WindowKind(bundleID: (info[kCGWindowOwnerPID as String] as? pid_t).flatMap(bundleID(of:)))
             )
             guard rect.intersects(CGRect(origin: .zero, size: frame.size)), World.isOccluder(box, on: stage) else { continue }
             boxes.append(box)
             rects.append(rect)
         }
         return WindowScan(world: World(occluders: boxes, cursor: cursor(in: frame, pixel: pixel)), maskRects: rects)
+    }
+
+    private static func bundleID(of pid: pid_t) -> String? {
+        NSRunningApplication(processIdentifier: pid)?.bundleIdentifier
     }
 
     private static func cursor(in frame: NSRect, pixel: CGFloat) -> (x: Double, y: Double)? {

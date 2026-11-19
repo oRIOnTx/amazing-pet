@@ -63,7 +63,8 @@ The menu also shows live **CPU, memory and battery** percentages.
 
 Turn on **Play on screen when I'm away** (after 1, 3, 5 or 10 minutes), or try **Play now**. Your pet jumps out of the menu bar and lives on your whole screen:
 
-- 🧗 **Explores your windows**: walks along their top edges, leaps between them and drops down.
+- 🧗 **Explores your windows**: walks along their top edges, leaps between them and drops down. It knows which window is in front, so it only walks on edges you can see.
+- 💻 **Reacts to your apps**: on a terminal or code editor it "types" with 0s and 1s floating up, on Music or Spotify it dances with notes, on a chat or mail app it shows a typing bubble. Apps are recognized by their bundle ID only; no window titles or contents are read.
 - 🙈 **Hide and seek**: hides *behind* your windows and peeks out from the edge.
 - 🖱 **Cursor hunt**: runs to where you left the mouse pointer and pounces at it.
 - 🧗 **Window climbing**: climbs up the side of a window, crosses its top and slides down the other side.

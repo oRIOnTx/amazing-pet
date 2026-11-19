@@ -308,3 +308,35 @@ struct WindowPlayTests {
         #expect(climb.height == Int(Pet.width))
     }
 }
+
+struct WindowKindTests {
+    @Test(arguments: [
+        ("com.apple.Terminal", WindowKind.code), ("com.jetbrains.rubymine", .code), ("com.microsoft.VSCode", .code),
+        ("com.apple.Music", .music), ("com.spotify.client", .music),
+        ("ru.keepcoder.Telegram", .chat), ("com.apple.mail", .chat),
+        ("com.apple.Safari", .other), ("", .other),
+    ])
+    func appsAreRecognizedByBundleID(bundleID: String, kind: WindowKind) {
+        #expect(WindowKind(bundleID: bundleID) == kind)
+    }
+
+    @Test func unknownProcessIsOther() {
+        #expect(WindowKind(bundleID: nil) == .other)
+    }
+
+    @Test(arguments: [(WindowKind.code, Sprites.bits), (.music, Sprites.note), (.chat, Sprites.speech)])
+    func petReactsToTheAppWindowItStandsOn(kind: WindowKind, effect: Sprite) {
+        let stage = Stage(width: 120, height: 80)
+        let window = Box(x: 20, y: 40, width: 80, height: 40, id: 1, kind: kind)
+        let simulation = PetSimulation(stage: stage, activity: .explore, dice: Dice(seed: 2))
+        simulation.world = World(occluders: [window])
+        simulation.drop(atCenter: 60)
+        var reacted = false
+        for _ in 0..<1200 where !reacted {
+            simulation.step(0.05)
+            let scene = simulation.snapshot()
+            reacted = scene.pet.y + Pet.height <= window.minY && scene.effects.contains { $0.sprite === effect }
+        }
+        #expect(reacted)
+    }
+}

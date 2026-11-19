@@ -277,6 +277,9 @@ public enum Sprites {
     ]
     public static let sniff = Sprite(["g.g", ".g."])
     public static let dust = Sprite(["g......g", ".g....g."])
+    public static let bits = Sprite([".v..vvv", "vv..v.v", ".v..v.v", ".v..v.v", "vvv.vvv"])
+    public static let note = Sprite(["..bb", "..bb", "..b.", "bbb.", "bb.."])
+    public static let speech = Sprite([".KKKKK.", "KWWWWWK", "KWKWKWK", "KWWWWWK", ".KK...."])
     public static let star = Sprite([".A.", "AAA", ".A."])
     public static let hamsterBall = Sprite([".....SSSSSSSS.....", "...SSS......SSS...", "..SSWW........SS..", ".S.W............S.", "SS..............SS", "S................S", "S................S", "SS..............SS", ".S..............S.", "..SS..........SS..", "...SSS......SSS...", ".....SSSSSSSS....."])
     public static let wheel = [
@@ -290,5 +293,5 @@ public enum Sprites {
         defaultPet.all + yarn + toyMouse + laser + thermometer
         + butterfly + homes + [bowl, zzz, heart, sweat, exclamation, fish, bubble, pot, shards]
         + bone + carrot + seeds + grain + lettuce + strawberry + flakes + leaf + wheel
-        + [ball, sniff, dust, star, hamsterBall]
+        + [ball, sniff, dust, star, hamsterBall, bits, note, speech]
 }

@@ -22,13 +22,15 @@ public struct Box: Equatable {
     public let maxX: Double
     public let maxY: Double
     public let id: Int
+    public let kind: WindowKind
 
-    public init(x: Double, y: Double, width: Double, height: Double, id: Int = 0) {
+    public init(x: Double, y: Double, width: Double, height: Double, id: Int = 0, kind: WindowKind = .other) {
         minX = x
         minY = y
         maxX = x + width
         maxY = y + height
         self.id = id
+        self.kind = kind
     }
 
     func overlaps(x: ClosedRange<Double>, y: ClosedRange<Double>) -> Bool {
