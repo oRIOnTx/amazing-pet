@@ -106,7 +106,7 @@ Switch the language from the menu (**Language → System default / English / У�
 Grab the latest **`AmazingPet-x.y.z.dmg`** from [**Releases**](../../releases/latest), open it and drag **AmazingPet** into **Applications**. Builds are universal, so they run natively on both Apple silicon and Intel.
 
 - **Stable**: every `v*` tag becomes a release.
-- **Nightly**: the [`nightly`](../../releases/tag/nightly) pre-release is rebuilt automatically on every push to `main`.
+- **Nightly**: the [`nightly`](../../releases/tag/nightly) pre-release is rebuilt automatically on every push to `main`. It is labeled with the upcoming version, for example `1.1.0-nightly.4` (4 commits after `v1.0.0`), and its notes list the unreleased changes.
 
 See [`CHANGELOG.md`](CHANGELOG.md) for what changed in each version.
 
