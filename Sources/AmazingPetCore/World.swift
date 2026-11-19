@@ -28,6 +28,24 @@ public struct Box: Equatable {
     }
 }
 
+struct Wall: Equatable {
+    let x: Double
+    let faceRight: Bool
+    let top: Platform
+    let base: Double
+
+    var climbX: Double { faceRight ? x - Pet.climbWidth : x }
+    var standCenter: Double { faceRight ? x - Pet.width / 2 : x + Pet.width / 2 }
+}
+
+struct Ledge: Equatable {
+    let top: Platform
+    let right: Bool
+
+    var edge: Double { right ? top.maxX : top.minX }
+    var outward: Double { right ? 1 : -1 }
+}
+
 public struct World: Equatable {
     public static let minimumWindowSize = (width: 30.0, height: 20.0)
     public static let maximumScreenShare = 0.7
@@ -88,6 +106,32 @@ public struct World: Equatable {
                 guard maxX - minX >= Pet.width + 4 else { return nil }
                 return Platform(y: surface.y, minX: minX, maxX: maxX)
             }
+        }
+    }
+
+    func windowTops(on stage: Stage, minWidth: Double = Pet.width + 4) -> [Platform] {
+        surfaces(on: stage).filter { $0.y < stage.height && $0.width >= minWidth }
+    }
+
+    func ledges(on stage: Stage, room: Double, minWidth: Double = Pet.width + 4) -> [Ledge] {
+        windowTops(on: stage, minWidth: minWidth).flatMap { top in
+            [Ledge(top: top, right: false), Ledge(top: top, right: true)].filter { ledge in
+                ledge.right ? top.maxX + room <= stage.width : top.minX - room >= 0
+            }
+        }
+    }
+
+    func walls(on stage: Stage) -> [Wall] {
+        windowTops(on: stage).flatMap { top -> [Wall] in
+            guard let box = occluders.first(where: { $0.minY.rounded(.down) == top.y && $0.minX <= top.minX + 0.5 && $0.maxX >= top.maxX - 0.5 })
+            else { return [] }
+            return [Wall(x: top.minX, faceRight: true, top: top, base: 0), Wall(x: top.maxX, faceRight: false, top: top, base: 0)]
+                .compactMap { wall in
+                    guard wall.standCenter >= Pet.width / 2, wall.standCenter <= stage.width - Pet.width / 2 else { return nil }
+                    let base = surface(under: (wall.standCenter, top.y + 1), on: stage)
+                    guard base.contains(wall.standCenter), base.y - top.y >= Pet.height + 4, box.maxY >= base.y - 6 else { return nil }
+                    return Wall(x: wall.x, faceRight: wall.faceRight, top: top, base: base.y)
+                }
         }
     }
 

@@ -14,6 +14,8 @@ public struct Stage: Equatable {
     }
 
     var ground: Double { height - Pet.height }
+
+    var travelBoost: Double { (width / Stage.menuBar.width).squareRoot().clamped(to: 1...2) }
 }
 
 extension Comparable {

@@ -33,6 +33,7 @@ public final class PetSimulation {
         guard new != activity else { return }
         activity = new
         pet.pause = 0
+        pet.letGo()
         behavior = new.makeBehavior(for: &pet, dice: dice)
     }
 

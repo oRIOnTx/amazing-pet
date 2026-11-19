@@ -181,3 +181,92 @@ struct MemoryUsageTests {
         #expect(MemoryPages(appInternal: 1, purgeable: 0, wired: 0, compressed: 0).usage(pageSize: 1, totalBytes: 0) == 0)
     }
 }
+
+struct WindowPlayTests {
+    let stage = Stage(width: 200, height: 110)
+    let windows = [Box(x: 18, y: 52, width: 70, height: 58), Box(x: 118, y: 34, width: 62, height: 42)]
+
+    private func simulation(_ activity: Activity, seed: UInt64 = 4) -> PetSimulation {
+        let simulation = PetSimulation(stage: stage, activity: .explore, dice: Dice(seed: seed))
+        simulation.world = World(occluders: windows)
+        simulation.drop(atCenter: 150)
+        for _ in 0..<20 { simulation.step(0.05) }
+        simulation.setActivity(activity)
+        return simulation
+    }
+
+    private func run(_ simulation: PetSimulation, seconds: Double) -> [SceneSnapshot] {
+        (0..<Int(seconds / 0.05)).map { _ in
+            simulation.step(0.05)
+            return simulation.snapshot()
+        }
+    }
+
+    @Test func toysAppearOnTheWindowThePetStandsOn() {
+        let top = windows[1].minY
+        for toy in [Activity.yarn, .mouse] {
+            let scene = simulation(toy).snapshot()
+            let prop = scene.prop!
+            #expect(prop.y + Double(prop.sprite.height) == top)
+        }
+    }
+
+    @Test func yarnRollsOffWindowAndPetFollows() {
+        let scenes = run(simulation(.yarn), seconds: 30)
+        #expect(scenes.contains { $0.prop!.y + YarnBehavior.size == stage.height })
+        #expect(scenes.contains { $0.pet.y + Pet.height == stage.height })
+    }
+
+    @Test func climbsUpWindowSideAndSlidesDown() {
+        let scenes = run(simulation(.climb), seconds: 40)
+        let clinging = scenes.filter { $0.pet.sprite.width == Int(Pet.climbWidth) }
+        #expect(!clinging.isEmpty)
+        #expect(clinging.allSatisfy { scene in windows.contains { scene.pet.x + Pet.climbWidth == $0.minX || scene.pet.x == $0.maxX } })
+        #expect(scenes.contains { scene in scene.pet.y + Pet.height == windows[0].minY })
+    }
+
+    @Test func sitsOnLedgeWithLegsDangling() {
+        let scenes = run(simulation(.ledge), seconds: 20)
+        let sitting = scenes.filter { $0.prop != nil }
+        #expect(!sitting.isEmpty)
+        for scene in sitting {
+            let legs = scene.prop!
+            #expect(windows.contains { legs.y == $0.minY && (legs.x == $0.maxX || legs.x + Double(legs.sprite.width) == $0.minX) })
+        }
+    }
+
+    @Test func knocksPotOffWindow() {
+        let scenes = run(simulation(.knock), seconds: 25)
+        #expect(scenes.contains { scene in scene.prop?.sprite === Sprites.pot && windows.contains { scene.prop!.y + 6 == $0.minY } })
+        #expect(scenes.contains { $0.prop?.sprite === Sprites.shards })
+        #expect(scenes.contains { !$0.effects.isEmpty })
+    }
+
+    @Test func switchingGameLetsGoOfTheWall() {
+        let simulation = simulation(.climb)
+        let scenes = run(simulation, seconds: 40)
+        guard let index = scenes.firstIndex(where: { $0.pet.sprite.width == Int(Pet.climbWidth) }) else {
+            Issue.record("never climbed")
+            return
+        }
+        let replay = self.simulation(.climb)
+        _ = run(replay, seconds: Double(index + 1) * 0.05)
+        replay.setActivity(.zoomies)
+        let after = run(replay, seconds: 5)
+        #expect(after.last!.pet.sprite.width == Int(Pet.width))
+        #expect(after.contains { scene in scene.pet.y + Pet.height == stage.height || windows.contains { scene.pet.y + Pet.height == $0.minY } })
+    }
+
+    @Test func navigatorLeavesPlatformTouchingScreenEdge() {
+        let platform = Platform(y: 50, minX: 0, maxX: 80)
+        #expect(Navigator.exit(from: platform, toward: 5, on: stage) == 81)
+        #expect(Navigator.exit(from: Platform(y: 50, minX: 0, maxX: 200), toward: 5, on: stage) == nil)
+    }
+
+    @Test func climbFramesAreTurnedUpright() {
+        #expect(SpeciesArt.turnedUp(["ab", "cd", "ef"]) == ["bdf", "ace"])
+        let climb = PetSprites().climb[0]
+        #expect(climb.width == Int(Pet.climbWidth))
+        #expect(climb.height == Int(Pet.width))
+    }
+}

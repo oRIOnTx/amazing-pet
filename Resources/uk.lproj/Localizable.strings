@@ -33,6 +33,9 @@
 "toy.peekaboo" = "Хованки";
 "toy.cursor" = "Полювання на курсор";
 "toy.perch" = "Дрімота на вікні";
+"toy.climb" = "Лазіння по вікнах";
+"toy.ledge" = "На краю вікна";
+"toy.knock" = "Пустощі";
 "alert.overheated.title" = "Перегрів";
 "alert.memoryTight.title" = "Памʼяті обмаль";
 "alert.memoryFull.title" = "Памʼять заповнена";
@@ -48,6 +51,9 @@
 "status.peekaboo" = "%@ ховається за вікном 🙈";
 "status.cursor" = "%@ полює на курсор 🖱";
 "status.perch" = "%@ дрімає на вікні 😴";
+"status.climb" = "%@ видирається на вікно й зʼїжджає вниз 🧗";
+"status.ledge" = "%@ сидить на краю вікна 🪟";
+"status.knock" = "%@ скидає вазон з вікна 🪴";
 "status.overheated" = "%@: спекотно! Mac перегрівся 🌡";
 "status.memoryTight" = "%@ ховається вдома: памʼяті стає мало 🏠";
 "status.memoryFull" = "%@ ледве вміщається вдома: памʼять заповнена 🏠";

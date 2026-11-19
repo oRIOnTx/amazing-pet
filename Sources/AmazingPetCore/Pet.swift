@@ -1,7 +1,8 @@
 struct Pet {
     static let width = 16.0
     static let height = 12.0
-    static let gravity = 180.0
+    static let climbWidth = 12.0
+    static let gravity = Fall.gravity
 
     let stage: Stage
     var world = World()
@@ -11,15 +12,17 @@ struct Pet {
     var stride = 0.0
     var moving = false
     var pause = 0.0
-    private(set) var feet: Double
-    private var fallSpeed = 0.0
-    private(set) var supported = true
+    private var fall: Fall
+    private(set) var clinging = false
 
     init(stage: Stage = .menuBar) {
         self.stage = stage
         x = min(14, stage.width - Self.width)
-        feet = stage.height
+        fall = Fall(feet: stage.height)
     }
+
+    var feet: Double { fall.feet }
+    var supported: Bool { fall.supported && !clinging }
 
     var maxX: Double { stage.width - Self.width }
     var ground: Double { stage.ground }
@@ -27,12 +30,13 @@ struct Pet {
     var lift: Double { stage.height - feet }
     var center: Double { x + Self.width / 2 }
     var isPaused: Bool { pause > 0 }
-    var isAirborne: Bool { !supported }
+    var isAirborne: Bool { !fall.supported && !clinging }
+    var lane: Platform { world.surface(under: (center, feet - 0.01), on: stage) }
 
     mutating func beginTick(_ dt: Double) {
         moving = false
         if pause > 0 { pause -= dt }
-        applyGravity(dt)
+        if !clinging { fall.update(dt, x: center, world: world, on: stage) }
     }
 
     mutating func walk(toward target: Double, speed: Double, dt: Double) {
@@ -47,8 +51,7 @@ struct Pet {
 
     mutating func jump(speed: Double = 55) {
         guard supported else { return }
-        fallSpeed = -speed
-        supported = false
+        fall.launch(speed: speed)
     }
 
     mutating func leap(height: Double) {
@@ -57,24 +60,34 @@ struct Pet {
 
     mutating func drop(atCenter center: Double) {
         x = (center - Self.width / 2).clamped(to: 0...maxX)
-        feet = Self.height
-        fallSpeed = 0
-        supported = false
+        clinging = false
+        fall.release(from: Self.height)
     }
 
-    private mutating func applyGravity(_ dt: Double) {
-        if supported {
-            guard world.surface(at: feet, x: center, on: stage) == nil else { return }
-            supported = false
-            fallSpeed = 0
+    mutating func cling(at feet: Double) {
+        clinging = true
+        fall.hold(at: feet)
+    }
+
+    mutating func letGo() {
+        guard clinging else { return }
+        clinging = false
+        fall.release(from: feet)
+    }
+
+    mutating func slide(down distance: Double) -> Bool {
+        let target = feet + distance
+        if let landing = world.landing(from: feet, to: target, x: center, on: stage) {
+            stand(on: landing)
+            return true
         }
-        let oldFeet = feet
-        feet += fallSpeed * dt + Self.gravity * dt * dt / 2
-        fallSpeed += Self.gravity * dt
-        guard fallSpeed > 0, let landing = world.landing(from: oldFeet, to: feet, x: center, on: stage) else { return }
-        feet = landing
-        fallSpeed = 0
-        supported = true
+        fall.hold(at: min(target, stage.height))
+        return false
+    }
+
+    mutating func stand(on surface: Double) {
+        clinging = false
+        fall.land(on: surface)
     }
 
     var walkingSprite: Sprite {

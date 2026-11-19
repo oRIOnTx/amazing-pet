@@ -10,9 +10,14 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 
 ### Added
 - Every pet now has a home: a little house, or an aquarium for the fish.
+- New screen games: your pet climbs up the side of a window and slides down, sits on a window edge with its legs dangling, and knocks a flower pot off a window.
 
 ### Changed
 - The memory indicator follows the macOS memory pressure level: at the warning level the pet calmly hides at home, and only at the critical level does the home shake with a blinking `!`. It no longer uses a box, and the fish stays in water.
+
+### Fixed
+- Screen play no longer gets stuck in one place: the yarn ball, toy mouse, laser dot and butterfly now appear on the window your pet is standing on, fall off edges, and lead it across all your windows instead of along the bottom of the screen.
+- The pet no longer gets stuck on a window that touches the edge of the screen.
 
 ## [1.0.0] - 2026-11-18
 

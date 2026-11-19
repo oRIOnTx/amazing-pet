@@ -98,6 +98,8 @@ public final class PetSprites {
     public let walk: [Sprite]
     public let run: [Sprite]
     public let rest: Sprite
+    public let climb: [Sprite]
+    public let dangle: [Sprite]
     public let pace: Double
     public let home: Home
     let headOffset: Double
@@ -108,6 +110,11 @@ public final class PetSprites {
         walk = art.walk.map { Sprite($0, colors: colors) }
         run = art.run.map { Sprite($0, colors: colors) }
         rest = Sprite(art.rest, colors: colors)
+        climb = art.climb.map { Sprite($0, colors: colors) }
+        dangle = [
+            Sprite(["KOK.KOK.", "KOK.KOK.", "KKK.KKK."], colors: colors),
+            Sprite(["KOK.KOK.", ".KOK.KOK", ".KKK.KKK"], colors: colors),
+        ]
         pace = look.species.pace
         home = look.species.home
         headOffset = look.species.headOffset

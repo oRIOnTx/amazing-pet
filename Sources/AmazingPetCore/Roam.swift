@@ -30,6 +30,9 @@ public struct RoamDirector {
             switch game {
             case .peekaboo: !world.hidingSpots(on: stage).isEmpty
             case .cursor: world.cursor != nil
+            case .climb: !world.walls(on: stage).isEmpty
+            case .ledge: !world.ledges(on: stage, room: LedgeBehavior.room).isEmpty
+            case .knock: !world.ledges(on: stage, room: KnockBehavior.room, minWidth: KnockBehavior.minWidth).isEmpty
             default: true
             }
         }

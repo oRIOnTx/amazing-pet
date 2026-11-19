@@ -30,12 +30,18 @@ enum Navigator {
             return false
         }
         if let current, current.contains(goal.x) {
-            let edge = goal.x - current.minX < current.maxX - goal.x ? current.minX - 1 : current.maxX + 1
-            pet.walk(toward: edge, speed: speed, dt: dt)
+            pet.walk(toward: exit(from: current, toward: goal.x, on: stage) ?? goal.x, speed: speed, dt: dt)
         } else {
             pet.walk(toward: goal.x, speed: speed, dt: dt)
         }
         return false
+    }
+
+    static func exit(from platform: Platform, toward x: Double, on stage: Stage) -> Double? {
+        let reachable = (Pet.width / 2)...(stage.width - Pet.width / 2)
+        return [platform.minX - 1, platform.maxX + 1]
+            .filter(reachable.contains)
+            .min { abs($0 - x) < abs($1 - x) }
     }
 
     static func randomGoal(for pet: Pet, dice: Dice) -> Goal {

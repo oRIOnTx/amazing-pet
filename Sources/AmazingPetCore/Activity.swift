@@ -1,8 +1,10 @@
 public enum Activity: String, CaseIterable {
-    case sleep, yarn, mouse, laser, zoomies, butterfly, explore, peekaboo, cursor, perch, overheated, memoryTight, memoryFull, hungry
+    case sleep, yarn, mouse, laser, zoomies, butterfly, explore, peekaboo, cursor, perch, climb, ledge, knock, overheated, memoryTight, memoryFull, hungry
 
     public static let toys: [Activity] = [.sleep, .yarn, .mouse, .laser]
-    public static let roamGames: [Activity] = [.explore, .peekaboo, .cursor, .zoomies, .butterfly, .yarn, .mouse, .laser]
+    public static let roamGames: [Activity] = [
+        .explore, .peekaboo, .cursor, .climb, .ledge, .knock, .zoomies, .butterfly, .yarn, .mouse, .laser,
+    ]
     public static let alerts: [Activity] = [.overheated, .memoryTight, .memoryFull, .hungry]
 
     public var isAlert: Bool { Self.alerts.contains(self) }
@@ -10,7 +12,7 @@ public enum Activity: String, CaseIterable {
     public var fps: Double {
         switch self {
         case .sleep, .overheated, .memoryTight, .memoryFull, .hungry: 4
-        case .explore, .peekaboo, .cursor, .perch: 15
+        case .explore, .peekaboo, .cursor, .perch, .climb, .ledge, .knock: 15
         case .yarn: 10
         case .mouse: 12
         case .butterfly: 12
@@ -30,6 +32,9 @@ public enum Activity: String, CaseIterable {
         case .peekaboo: return PeekabooBehavior(pet: pet, dice: dice)
         case .cursor: return CursorBehavior(pet: pet, dice: dice)
         case .perch: return PerchBehavior(pet: pet, dice: dice)
+        case .climb: return ClimbBehavior(pet: pet, dice: dice)
+        case .ledge: return LedgeBehavior(pet: pet, dice: dice)
+        case .knock: return KnockBehavior(pet: pet, dice: dice)
         case .overheated: return alert(.overheated, pet: &pet)
         case .memoryTight: return alert(.memoryTight(pet.sprites.home), pet: &pet)
         case .memoryFull: return alert(.memoryFull(pet.sprites.home), pet: &pet)

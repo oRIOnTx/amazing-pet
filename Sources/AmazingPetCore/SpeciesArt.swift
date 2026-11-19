@@ -5,6 +5,16 @@ struct SpeciesArt {
 
     var all: [[String]] { walk + run + [rest] }
 
+    var climb: [[String]] { walk.map(Self.turnedUp) }
+
+    static func turnedUp(_ rows: [String]) -> [String] {
+        let grid = rows.map(Array.init)
+        let width = grid.map(\.count).max() ?? 0
+        return (0..<width).map { column in
+            String(grid.map { row in column < row.count ? row[row.count - 1 - column] : Character(".") })
+        }
+    }
+
     static func quadruped(_ top: [String], rest: [String], legs: Character = "O") -> SpeciesArt {
         let paint = { (rows: [String]) in top + rows.map { $0.replacingOccurrences(of: "O", with: String(legs)) } }
         return SpeciesArt(

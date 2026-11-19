@@ -85,9 +85,12 @@ enum DocsExporter {
         simulation.world = World(occluders: windows, cursor: cursor)
         simulation.drop(atCenter: 150)
         let script: [(seconds: Double, text: String, activity: Activity)] = [
-            (7, "Jumps out of the menu bar and explores your windows", .explore),
-            (8, "Plays hide and seek behind them", .peekaboo),
-            (6, "Hunts the cursor you left behind", .cursor),
+            (6, "Jumps out of the menu bar and explores your windows", .explore),
+            (7, "Plays hide and seek behind them", .peekaboo),
+            (5, "Hunts the cursor you left behind", .cursor),
+            (9, "Climbs up a window and slides down", .climb),
+            (9, "Sits on the edge with its legs dangling", .ledge),
+            (8, "Knocks a flower pot off a window", .knock),
             (3, "Zoomies!", .zoomies),
         ]
         return script.flatMap { part -> [CGImage] in

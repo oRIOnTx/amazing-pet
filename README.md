@@ -60,7 +60,10 @@ Turn on **Play on screen when I'm away** (after 1, 3, 5 or 10 minutes), or try *
 - 🧗 **Explores your windows**: walks along their top edges, leaps between them and drops down.
 - 🙈 **Hide and seek**: hides *behind* your windows and peeks out from the edge.
 - 🖱 **Cursor hunt**: runs to where you left the mouse pointer and pounces at it.
-- 💨 **Zoomies**, 🦋 **butterfly chasing**, plus yarn, mouse and laser across the whole screen.
+- 🧗 **Window climbing**: climbs up the side of a window, crosses its top and slides down the other side.
+- 🪟 **Ledge sitting**: sits on the edge of a window with its legs dangling.
+- 🪴 **Mischief**: pushes a flower pot off a window and watches it fall.
+- 💨 **Zoomies**, 🦋 **butterfly chasing**, plus yarn, mouse and laser. Toys live on the window your pet stands on: the yarn ball rolls off the edge and your pet jumps down after it.
 - 😴 **Window nap**: after 15 minutes it climbs onto your highest window and falls asleep.
 
 Move the mouse or press any key and it's instantly back in the menu bar. It never starts while a video, call or presentation is keeping your display awake, and clicks always pass straight through it.
@@ -176,10 +179,11 @@ Sources/
 ├── AmazingPetCore/      Pure Swift, no AppKit, fully unit-tested
 │   ├── Species*.swift   Pixel art (ASCII rows) and color palettes for every animal
 │   ├── Sprites.swift    Toys, props and effects; sprite → CGImage rendering
-│   ├── Pet.swift        Position, walking, jumping and 2D gravity with platform landing
+│   ├── Pet.swift        Position, walking, jumping, clinging to walls; Fall.swift: gravity with platform landing
 │   ├── Behaviors.swift  One strategy per activity: yarn, mouse, laser, zoomies, butterfly, alerts…
 │   ├── WorldBehaviors   Navigator plus explore, hide-and-seek, cursor hunt and window nap
-│   ├── World.swift      Window tops as platforms, hiding spots, occluders
+│   ├── WindowGames      Window climbing, ledge sitting and knocking a flower pot off
+│   ├── World.swift      Window tops as platforms, ledges, climbable walls, hiding spots
 │   ├── ActivityPolicy   What to play given CPU, thermal state, memory and battery
 │   ├── Roam.swift       When to leave the menu bar, when to come back, which game is next
 │   └── SystemSampler    CPU ticks, memory pages, thermal state, battery, idle time

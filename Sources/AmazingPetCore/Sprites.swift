@@ -141,9 +141,11 @@ public enum Sprites {
         Sprite([".U.u.", ".UKu.", "..K..", "..K.."]),
     ]
     public static let fish = Sprite([".FFF.F", "FEFFFF", ".FFF.F"])
+    public static let pot = Sprite([".v.v.", "..v..", "KcccK", "KCCCK", "KCCCK", ".KKK."])
+    public static let shards = Sprite(["..v.v..", "cK.vKCc"])
     public static let bubble = Sprite([".S.", "S.S", ".S."])
 
     public static let all: [Sprite] =
         defaultPet.all + yarn + toyMouse + laser + thermometer
-        + butterfly + [house, aquarium, bowl, zzz, heart, sweat, exclamation, fish, bubble]
+        + butterfly + [house, aquarium, bowl, zzz, heart, sweat, exclamation, fish, bubble, pot, shards]
 }
