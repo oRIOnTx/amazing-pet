@@ -15,23 +15,20 @@ enum Permission: CaseIterable {
         }
     }
 
-    func request() {
+    func request(completion: @escaping () -> Void = {}) {
         switch self {
         case .dockIcons:
             let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
             if !AXIsProcessTrustedWithOptions(options) { Self.open(Self.accessibilityPane) }
+            completion()
         case .desktopIcons:
             DispatchQueue.global(qos: .userInitiated).async {
                 let status = Self.finderStatus(asking: true)
-                if status != noErr { DispatchQueue.main.async { Self.open(Self.automationPane) } }
+                DispatchQueue.main.async {
+                    if status != noErr { Self.open(Self.automationPane) }
+                    completion()
+                }
             }
-        }
-    }
-
-    func requestAndWait() {
-        switch self {
-        case .dockIcons: request()
-        case .desktopIcons: if Self.finderStatus(asking: true) != noErr { Self.open(Self.automationPane) }
         }
     }
 
