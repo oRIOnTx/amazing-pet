@@ -9,7 +9,7 @@ Only changes that affect the app are listed here. Docs, CI and tooling changes a
 ## [Unreleased]
 
 ### Added
-- Every pet now has a home: a little house, or an aquarium for the fish.
+- Every animal now has its own home: a basket for the cat, a kennel for the dog, a den for the fox, a burrow with a carrot for the rabbit, a cage with a wheel for the hamster, a birdhouse for the bird, an aquarium for the fish and a rock pile for the turtle.
 - New screen games: your pet climbs up the side of a window and slides down, sits on a window edge with its legs dangling, and knocks a flower pot off a window.
 
 ### Changed

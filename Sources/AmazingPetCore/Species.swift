@@ -26,7 +26,18 @@ public enum Species: String, CaseIterable {
 
     var headOffset: Double { 12 }
 
-    var home: Home { self == .fish ? .aquarium : .house }
+    var home: Home {
+        switch self {
+        case .cat: .dry(Sprites.basket)
+        case .dog: .dry(Sprites.kennel)
+        case .fox: .dry(Sprites.den)
+        case .rabbit: .dry(Sprites.burrow)
+        case .hamster: .dry(Sprites.cage)
+        case .bird: .dry(Sprites.birdhouse)
+        case .fish: .aquarium
+        case .turtle: .dry(Sprites.rocks)
+        }
+    }
 
     public var coats: [Coat] { palettes.map(\.coat) }
 

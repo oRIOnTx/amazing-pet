@@ -100,19 +100,94 @@ public enum Sprites {
         Sprite([".KK.", "KWWK", "KRWK", "KRWK", "KRWK", "KRRK", "KRRK", "KRRK", "KRRK", ".KK."]),
     ]
 
-    public static let house = Sprite([
-        "......KKKKKKKK......",
-        "...KKKccccccccKKK...",
-        "KKKccccccccccccccKKK",
+    public static let basket = Sprite([
+        "....................",
+        "....................",
+        "......cccccccc......",
+        ".....c........c.....",
+        "....c..........c....",
+        "...c............c...",
+        "..c..............c..",
+        "..c..............c..",
+        ".c................c.",
+        "KKcKcKcKcKcKcKcKcKKK",
+        "KCcCcCcCcCcCcCcCcCcK",
+        ".KKKKKKKKKKKKKKKKKK.",
+    ])
+
+    public static let kennel = Sprite([
+        "......RRRRRRRR......",
+        "...RRRHHHHHHHHRRR...",
+        "RRRHHHHHHHHHHHHHHRRR",
         "KKKKKKKKKKKKKKKKKKKK",
         ".KCCCCCCK........KCK",
         ".KCCCCCCK........KCK",
         ".KccccccK........KcK",
-        ".KCCCCCCK........KCK",
-        ".KCCCCCCK........KCK",
+        ".KCCWWCCK........KCK",
+        ".KCCWWCCK........KCK",
         ".KccccccK........KcK",
         ".KCCCCCCK........KCK",
         ".KKKKKKKK........KKK",
+    ])
+
+    public static let den = Sprite([
+        "....................",
+        "....................",
+        "....................",
+        "....................",
+        "....................",
+        "..vvvvvv............",
+        ".vccccccv.........vv",
+        "cccCccccc........vcc",
+        "cccccccccK......KcCc",
+        "cccccCcccKKKKKKKKccc",
+        "ccCcccccccccCccccCcc",
+        "ccccccccCccccccccccc",
+    ])
+
+    public static let burrow = Sprite([
+        "....................",
+        "..v.v...............",
+        "...v................",
+        "..AAA...............",
+        "..AAA...............",
+        "..AAAvvv............",
+        ".vvAvvvvv.........vv",
+        "vvvAvvvvv........vvv",
+        "vvvvvvvvvK......Kvvv",
+        "vvvvvvvvvKKKKKKKKvvv",
+        "vvvvvvvvvvvvvvvvvvvv",
+        "vvvvvvvvvvvvvvvvvvvv",
+    ])
+
+    public static let cage = Sprite([
+        "...GGGGGGGGGGGGGG...",
+        ".GG......GG......GG.",
+        "G..G..G..G..G..G..GG",
+        "G..G..G..G..G..G..GG",
+        "G.KKK.G..G..G..G..GG",
+        "GK.g.KG..G..G..G..GG",
+        "GKgggKG..G..G..G..GG",
+        "GK.g.KG..G..G..G..GG",
+        "G.KKK.G..G..G..G..GG",
+        "G..G..G..G..G..G..GG",
+        "bbbbbbbbbbbbbbbbbbbb",
+        "KKKKKKKKKKKKKKKKKKKK",
+    ])
+
+    public static let birdhouse = Sprite([
+        ".........RR.........",
+        ".......RRHHRR.......",
+        ".....RRHHHHHHRR.....",
+        "...RRHHHHHHHHHHRR...",
+        ".RRRRRRRRRRRRRRRRRR.",
+        "..KTTTTTK......KTK..",
+        "..KTbbTTK......KTK..",
+        "..KTbbTTK......KTK..",
+        "..KTTTTTK......KTK..",
+        "..KTTTTTTK....KTTKcc",
+        "..KTTTTTTTKKKKTTTK..",
+        "..KKKKKKKKKKKKKKKK..",
     ])
 
     public static let aquarium = Sprite([
@@ -130,6 +205,21 @@ public enum Sprites {
         "KKKKKKKKKKKKKKKKKKKK",
     ])
 
+    public static let rocks = Sprite([
+        "....................",
+        "....................",
+        "....vv..............",
+        ".vvvv.v.............",
+        ".vKKKKv.............",
+        ".KGGGGK.............",
+        "KGggGGGK............",
+        "KGGGGgGGK.........KK",
+        "KGgGGGgGK........KGG",
+        "KGGGGGgGGK.......GgG",
+        "KGGGGGGGGK.......GGG",
+        "BBBBSBBBBBBBBSBBBBSB",
+    ])
+
     public static let bowl = Sprite(["KKKKKKKK", "KbbbbbbK", ".KKKKKK."])
 
     public static let zzz = Sprite(["BBB", ".B.", "BBB"])
@@ -145,7 +235,9 @@ public enum Sprites {
     public static let shards = Sprite(["..v.v..", "cK.vKCc"])
     public static let bubble = Sprite([".S.", "S.S", ".S."])
 
+    public static let homes = [basket, kennel, den, burrow, cage, birdhouse, aquarium, rocks]
+
     public static let all: [Sprite] =
         defaultPet.all + yarn + toyMouse + laser + thermometer
-        + butterfly + [house, aquarium, bowl, zzz, heart, sweat, exclamation, fish, bubble, pot, shards]
+        + butterfly + homes + [bowl, zzz, heart, sweat, exclamation, fish, bubble, pot, shards]
 }

@@ -43,7 +43,7 @@ struct SimulationTests {
     }
 
     @Test(arguments: [
-        (Activity.overheated, Sprites.thermometer[0]), (.memoryTight, Sprites.house), (.memoryFull, Sprites.house),
+        (Activity.overheated, Sprites.thermometer[0]), (.memoryTight, Sprites.basket), (.memoryFull, Sprites.basket),
         (.hungry, Sprites.bowl),
     ])
     func alertsShowTheirProp(activity: Activity, prop: Sprite) {
@@ -57,6 +57,12 @@ struct SimulationTests {
     func fishHidesInAquarium(activity: Activity) {
         let simulation = PetSimulation(activity: activity, look: PetLook(species: .fish), dice: Dice(seed: 1))
         #expect(simulation.snapshot().prop?.sprite === Sprites.aquarium)
+    }
+
+    @Test func everySpeciesHasItsOwnHome() {
+        let homes = Species.allCases.map { PetSprites(look: PetLook(species: $0)).home.sprite }
+        #expect(Set(homes.map(ObjectIdentifier.init)).count == Species.allCases.count)
+        #expect(homes.allSatisfy { $0.width == homes[0].width && Double($0.height) <= Stage.menuBar.height })
     }
 
     @Test func changingSpeciesMovesPetToItsHome() {

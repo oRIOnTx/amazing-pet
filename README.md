@@ -45,7 +45,7 @@ Your pet tells you when something needs attention, before the toys:
 | Situation | What you see |
 |---|---|
 | 🌡 Mac is overheating (`thermalState` serious or critical) | Lying next to a thermometer, sweating |
-| 🏠 Memory pressure is elevated (warning) | Hides in its home, a little uneasy: a house, or an aquarium for the fish |
+| 🏠 Memory pressure is elevated (warning) | Hides in its own home, a little uneasy: a basket for the cat, a kennel for the dog, a den for the fox, a burrow with a carrot for the rabbit, a cage with a wheel for the hamster, a birdhouse for the bird, an aquarium for the fish and a rock pile for the turtle |
 | 🚨 Memory pressure is critical | Barely fits at home: the house shakes, with a blinking `!` |
 | 🐟 Battery below 15% and not charging | Sitting by an empty bowl, dreaming of fish |
 
