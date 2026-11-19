@@ -48,6 +48,10 @@
 "toy.lettuce" = "Листок салату";
 "toy.stroll" = "Прогулянка";
 "toy.strawberry" = "Полуниця";
+"toy.hunt" = "Пошук скарбу";
+"toy.peekOver" = "Визирання";
+"toy.hang" = "Під стелею";
+"toy.gnaw" = "Гризіння";
 "toy.zoomies" = "Шалені перегони";
 "toy.butterfly" = "Метелик";
 "toy.explore" = "Досліджує вікна";
@@ -87,6 +91,10 @@
 "status.lettuce" = "%@ жує листок салату 🥬";
 "status.stroll" = "%@ неспішно прогулюється 🐢";
 "status.strawberry" = "%@ мчить до полуниці 🍓";
+"status.hunt" = "%@ шукає іграшку, сховану за вікнами 🔎";
+"status.peekOver" = "%@ визирає з-за вікна 👀";
+"status.hang" = "%@ висить під смугою меню 🙃";
+"status.gnaw" = "%@ гризе куточок вікна 😬";
 "status.zoomies" = "%@ шалено гасає 💨";
 "status.butterfly" = "%@ полює на метелика 🦋";
 "status.explore" = "%@ досліджує вікна 🧗";

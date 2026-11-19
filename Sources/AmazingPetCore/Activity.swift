@@ -2,11 +2,11 @@ public enum Activity: String, CaseIterable {
     case sleep, yarn, mouse, laser
     case bone, fetch, tailChase, sniff, pounce, leaf, carrot, hop, binky, seeds, hamsterBall, wheel
     case peck, flutter, fly, bubbles, flakes, dart, lettuce, stroll, strawberry
-    case zoomies, butterfly, explore, peekaboo, cursor, perch, climb, ledge, knock
+    case zoomies, butterfly, explore, peekaboo, cursor, perch, climb, ledge, knock, hunt, peekOver, hang, gnaw
     case overheated, memoryTight, memoryFull, hungry
 
     public static let worldGames: [Activity] = [
-        .explore, .peekaboo, .cursor, .climb, .ledge, .knock, .zoomies, .butterfly,
+        .explore, .peekaboo, .cursor, .climb, .ledge, .knock, .hunt, .peekOver, .hang, .gnaw, .zoomies, .butterfly,
     ]
     public static let allToys: [Activity] = Species.allCases.flatMap(\.toys)
     public static let alerts: [Activity] = [.overheated, .memoryTight, .memoryFull, .hungry]
@@ -23,7 +23,7 @@ public enum Activity: String, CaseIterable {
         switch self {
         case .sleep, .overheated, .memoryTight, .memoryFull, .hungry: 4
         case .bone, .carrot, .seeds, .peck, .lettuce, .sniff, .bubbles, .stroll, .flakes: 8
-        case .explore, .peekaboo, .cursor, .perch, .climb, .ledge, .knock: 15
+        case .explore, .peekaboo, .cursor, .perch, .climb, .ledge, .knock, .hunt, .peekOver, .hang, .gnaw: 15
         case .yarn, .strawberry: 10
         case .mouse, .butterfly, .leaf, .hop, .binky, .pounce, .flutter, .tailChase, .fly, .wheel: 12
         case .laser, .zoomies, .fetch, .dart, .hamsterBall: 15
@@ -66,6 +66,10 @@ public enum Activity: String, CaseIterable {
         case .climb: return ClimbBehavior(pet: pet, dice: dice)
         case .ledge: return LedgeBehavior(pet: pet, dice: dice)
         case .knock: return KnockBehavior(pet: pet, dice: dice)
+        case .hunt: return HuntBehavior(pet: pet, dice: dice)
+        case .peekOver: return PeekOverBehavior(pet: pet, dice: dice)
+        case .hang: return HangBehavior(pet: pet, dice: dice)
+        case .gnaw: return GnawBehavior(pet: pet, dice: dice)
         case .overheated: return alert(.overheated, pet: &pet)
         case .memoryTight: return alert(.memoryTight(pet.sprites.home), pet: &pet)
         case .memoryFull: return alert(.memoryFull(pet.sprites.home), pet: &pet)

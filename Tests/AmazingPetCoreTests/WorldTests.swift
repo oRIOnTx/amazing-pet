@@ -86,7 +86,10 @@ struct WorldTests {
         let empty = RoamDirector.availableGames(in: World(), on: stage)
         #expect(!empty.contains(.peekaboo))
         #expect(!empty.contains(.cursor))
-        let rich = World(occluders: [Box(x: 50, y: 150, width: 60, height: 50)], cursor: (10, 10))
+        #expect(!empty.contains(.hunt))
+        #expect(!empty.contains(.peekOver))
+        #expect(!empty.contains(.gnaw))
+        let rich = World(occluders: [Box(x: 50, y: 150, width: 60, height: 50), Box(x: 180, y: 60, width: 60, height: 40)], cursor: (10, 10))
         #expect(RoamDirector.availableGames(in: rich, on: stage) == Activity.roamGames(for: .cat))
         #expect(RoamDirector.availableGames(in: rich, on: stage, species: .dog).contains(.fetch))
     }
@@ -293,6 +296,54 @@ struct WindowPlayTests {
         let after = run(replay, seconds: 5)
         #expect(after.last!.pet.sprite.width == Int(Pet.width))
         #expect(after.contains { scene in scene.pet.y + Pet.height == stage.height || windows.contains { scene.pet.y + Pet.height == $0.minY } })
+    }
+
+    private func history(_ simulation: PetSimulation, seconds: Double) -> [(scene: SceneSnapshot, hiding: Int)] {
+        (0..<Int(seconds / 0.05)).map { _ in
+            simulation.step(0.05)
+            return (simulation.snapshot(), simulation.hidingWindows)
+        }
+    }
+
+    @Test func huntsForAToyHiddenBehindAWindowAndPlaysWithIt() {
+        let all = run(simulation(.hunt), seconds: 40)
+        let inside = { (item: SceneSnapshot.Item) in self.windows.contains { item.x >= $0.minX && item.x + Double(item.sprite.width) <= $0.maxX && item.y + Double(item.sprite.height) > $0.minY } }
+        #expect(all.contains { $0.prop.map(inside) == true })
+        #expect(all.contains { $0.prop.map(inside) == false })
+        #expect(all.contains { $0.effects.contains { $0.sprite === Sprites.question } })
+        #expect(all.contains { $0.effects.contains { $0.sprite === Sprites.exclamation } })
+    }
+
+    @Test func popsUpFromBehindAWindowTop() {
+        let all = history(simulation(.peekOver), seconds: 30)
+        let held = zip(all, all.dropFirst()).filter { $0.scene.pet.y == $1.scene.pet.y }.map(\.1)
+        let peeking = held.filter { entry in windows.contains { entry.scene.pet.y + Pet.height == $0.minY + PeekOverBehavior.peekDepth } }
+        let ducked = all.filter { entry in windows.contains { entry.scene.pet.y + Pet.height == $0.minY + PeekOverBehavior.hideDepth } }
+        #expect(!peeking.isEmpty)
+        #expect(!ducked.isEmpty)
+        #expect(peeking.allSatisfy { $0.hiding >= 1 })
+    }
+
+    @Test func hangsFromTheMenuBarAndDropsDown() {
+        let world = World(occluders: [Box(x: 20, y: 40, width: 120, height: 40)])
+        let simulation = PetSimulation(stage: stage, activity: .explore, dice: Dice(seed: 4))
+        simulation.world = world
+        simulation.drop(atCenter: 80)
+        for _ in 0..<20 { simulation.step(0.05) }
+        simulation.setActivity(.hang)
+        let all = run(simulation, seconds: 30)
+        let isHanging = { (scene: SceneSnapshot) in scene.pet.y == 0 && Species.cat.art.hang.contains(scene.pet.sprite.rows) }
+        let hanging = all.filter(isHanging)
+        #expect(Set(hanging.map(\.pet.x)).count > 3)
+        let firstHang = all.firstIndex(where: isHanging) ?? all.endIndex
+        #expect(all[firstHang...].contains { $0.pet.y > 0 })
+    }
+
+    @Test func gnawsAWindowCornerWithCrumbsFallingOutside() {
+        let all = run(simulation(.gnaw), seconds: 20)
+        let crumbs = all.flatMap(\.effects).filter { $0.sprite === Sprites.crumb }
+        #expect(!crumbs.isEmpty)
+        #expect(crumbs.allSatisfy { crumb in !windows.contains { crumb.x + 1 > $0.minX && crumb.x + 1 < $0.maxX && crumb.y > $0.minY } })
     }
 
     @Test func navigatorLeavesPlatformTouchingScreenEdge() {

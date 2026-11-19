@@ -41,6 +41,18 @@ public enum Species: String, CaseIterable {
 
     public var menuToys: [Activity] { [.sleep] + toys }
 
+    var favorite: Sprite {
+        switch self {
+        case .cat: Sprites.yarn[0]
+        case .dog, .fish: Sprites.ball
+        case .fox: Sprites.leaf[0]
+        case .rabbit: Sprites.carrot[0]
+        case .hamster: Sprites.seeds[0]
+        case .bird: Sprites.grain[0]
+        case .turtle: Sprites.strawberry[0]
+        }
+    }
+
     public static func owner(of activity: Activity) -> Species? {
         allCases.first { $0.toys.contains(activity) }
     }
@@ -134,6 +146,8 @@ public final class PetSprites {
     public let run: [Sprite]
     public let rest: Sprite
     public let climb: [Sprite]
+    public let hang: [Sprite]
+    public let favorite: Sprite
     public let dangle: [Sprite]
     public let pace: Double
     public let home: Home
@@ -146,6 +160,8 @@ public final class PetSprites {
         run = art.run.map { Sprite($0, colors: colors) }
         rest = Sprite(art.rest, colors: colors)
         climb = art.climb.map { Sprite($0, colors: colors) }
+        hang = art.hang.map { Sprite($0, colors: colors) }
+        favorite = look.species.favorite
         dangle = [
             Sprite(["KOK.KOK.", "KOK.KOK.", "KKK.KKK."], colors: colors),
             Sprite(["KOK.KOK.", ".KOK.KOK", ".KKK.KKK"], colors: colors),

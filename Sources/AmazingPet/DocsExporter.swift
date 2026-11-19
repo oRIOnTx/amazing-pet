@@ -113,18 +113,24 @@ enum DocsExporter {
     private static func roamDemo() -> [CGImage] {
         let stage = Stage(width: 200, height: 110)
         let scale = 3.0
-        let windows = [Box(x: 18, y: 52, width: 70, height: 58), Box(x: 118, y: 34, width: 62, height: 42)]
+        let windows = [
+            Box(x: 18, y: 52, width: 70, height: 58, id: 1, kind: .code), Box(x: 118, y: 34, width: 62, height: 42, id: 2, kind: .music),
+        ]
         let cursor = (x: 104.0, y: 96.0)
-        let simulation = PetSimulation(stage: stage, activity: .explore, look: PetLook(species: .cat, coat: .gray), dice: Dice(seed: 4))
+        let simulation = PetSimulation(stage: stage, activity: .explore, look: PetLook(species: .cat, coat: .gray), dice: Dice(seed: 3))
         simulation.world = World(occluders: windows, cursor: cursor)
         simulation.drop(atCenter: 150)
         let script: [(seconds: Double, text: String, activity: Activity)] = [
-            (6, "Jumps out of the menu bar and explores your windows", .explore),
-            (7, "Plays hide and seek behind them", .peekaboo),
-            (5, "Hunts the cursor you left behind", .cursor),
-            (9, "Climbs up a window and slides down", .climb),
-            (9, "Sits on the edge with its legs dangling", .ledge),
-            (8, "Knocks a flower pot off a window", .knock),
+            (10, "Explores your windows and reacts to the apps", .explore),
+            (6, "Plays hide and seek behind them", .peekaboo),
+            (4, "Hunts the cursor you left behind", .cursor),
+            (8, "Climbs up a window and slides down", .climb),
+            (7, "Sits on the edge with its legs dangling", .ledge),
+            (7, "Knocks a flower pot off a window", .knock),
+            (12, "Finds a toy hidden behind a window", .hunt),
+            (8, "Pops up from behind a window", .peekOver),
+            (8, "Hangs from the menu bar", .hang),
+            (6, "Nibbles a window corner", .gnaw),
             (3, "Zoomies!", .zoomies),
         ]
         return script.flatMap { part -> [CGImage] in
@@ -134,8 +140,14 @@ enum DocsExporter {
                 let ctx = ImageExporter.makeContext(width: Int(stage.width * scale), height: Int(stage.height * scale) + 40)
                 ctx.setFillColor(Palette.color(0x3A6F8F))
                 ctx.fill(CGRect(x: 0, y: 0, width: ctx.width, height: ctx.height))
+                let hiding = simulation.hidingWindows
+                for (index, window) in windows.enumerated().reversed() where index >= hiding {
+                    drawWindow(window, stage: stage, scale: scale, in: ctx)
+                }
                 ImageExporter.draw(simulation.snapshot(), in: ctx, origin: .zero, scale: scale, stage: stage)
-                for window in windows { drawWindow(window, stage: stage, scale: scale, in: ctx) }
+                for (index, window) in windows.enumerated().reversed() where index < hiding {
+                    drawWindow(window, stage: stage, scale: scale, in: ctx)
+                }
                 if part.activity == .cursor { drawSprite(cursorArrow, x: cursor.x, y: cursor.y, stage: stage, scale: scale, in: ctx) }
                 ctx.setFillColor(PixelTheme.background)
                 ctx.fill(CGRect(x: 0, y: stage.height * scale, width: Double(ctx.width), height: 40))

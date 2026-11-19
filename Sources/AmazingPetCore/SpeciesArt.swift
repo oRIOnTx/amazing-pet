@@ -6,6 +6,7 @@ struct SpeciesArt {
     var all: [[String]] { walk + run + [rest] }
 
     var climb: [[String]] { walk.map(Self.turnedUp) }
+    var hang: [[String]] { walk.map { $0.reversed() } }
 
     static func turnedUp(_ rows: [String]) -> [String] {
         let grid = rows.map(Array.init)

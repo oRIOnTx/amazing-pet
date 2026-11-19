@@ -69,7 +69,10 @@ Turn on **Play on screen when I'm away** (after 1, 3, 5 or 10 minutes), or try *
 - 🖱 **Cursor hunt**: runs to where you left the mouse pointer and pounces at it.
 - 🧗 **Window climbing**: climbs up the side of a window, crosses its top and slides down the other side.
 - 🪟 **Ledge sitting**: sits on the edge of a window with its legs dangling.
-- 🪴 **Mischief**: pushes a flower pot off a window and watches it fall.
+- 🪴 **Mischief**: pushes a flower pot off a window and watches it fall, or nibbles a window corner and lets the crumbs drop.
+- 🔎 **Treasure hunt**: its favorite toy is hidden behind one of your windows; it sniffs behind them one by one, finds it, knocks it out and plays with it.
+- 👀 **Pop-up peeking**: ducks behind the top edge of a window and pops its head up here and there.
+- 🙃 **Ceiling hang**: leaps up from a high window, hangs upside down from the menu bar and swings along it before dropping down.
 - 💨 **Zoomies**, 🦋 **butterfly chasing**, plus your animal's own toys. Toys live on the window your pet stands on: the yarn ball rolls off the edge and your pet jumps down after it.
 - 😴 **Window nap**: after 15 minutes it climbs onto your highest window and falls asleep.
 
@@ -189,7 +192,7 @@ Sources/
 │   ├── Pet.swift        Position, walking, jumping, clinging to walls; Fall.swift: gravity with platform landing
 │   ├── Behaviors.swift  One strategy per activity: yarn, mouse, laser, zoomies, butterfly, alerts…
 │   ├── WorldBehaviors   Navigator plus explore, hide-and-seek, cursor hunt and window nap
-│   ├── WindowGames      Window climbing, ledge sitting and knocking a flower pot off
+│   ├── WindowGames      Climbing, ledges, flower pot, treasure hunt, pop-up peeking, ceiling hang, nibbling
 │   ├── SpeciesBehaviors Snacks, wandering, hops, fetch, tail chase, flying, hamster ball and wheel
 │   ├── World.swift      Window tops as platforms, ledges, climbable walls, hiding spots
 │   ├── ActivityPolicy   What to play given CPU, thermal state, memory and battery

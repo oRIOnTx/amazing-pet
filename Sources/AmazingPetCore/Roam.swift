@@ -33,6 +33,10 @@ public struct RoamDirector {
             case .climb: !world.walls(on: stage).isEmpty
             case .ledge: !world.ledges(on: stage, room: LedgeBehavior.room).isEmpty
             case .knock: !world.ledges(on: stage, room: KnockBehavior.room, minWidth: KnockBehavior.minWidth).isEmpty
+            case .hunt: !world.hidingSpots(on: stage).isEmpty
+            case .peekOver: !world.windowTops(on: stage).isEmpty
+            case .hang: world.surfaces(on: stage).contains { $0.y - Pet.height <= HangBehavior.reach && $0.width >= Pet.width }
+            case .gnaw: !world.ledges(on: stage, room: GnawBehavior.room).isEmpty
             default: true
             }
         }
